@@ -1,7 +1,7 @@
 <p align="center">
 	<img src="https://user-images.githubusercontent.com/30529572/72455010-fb38d400-37e7-11ea-9c1e-8cdeb5f5906e.png" />
-	<h2 align="center"> < Insert Project Title Here > </h2>
-	<h4 align="center"> < Insert Project Description Here > <h4>
+	<h2 align="center"> MailerGui </h2>
+	<h4 align="center"> A pip package with a GUI interface for managing bulk mailing of organization events <h4>
 </p>
 
 ---
@@ -10,38 +10,47 @@
 
 
 ## Functionalities
-- [ ]  < insert functionality >
-- [ ]  < insert functionality >
-- [ ]  < insert functionality >
-- [ ]  < insert functionality >
+- [ ]  Send Bulk Mail at once
+- [ ]  Send test mail to any email
+- [ ]  View and edit HTML template
+- [ ]  Set Placeholder values for the template
+- [ ]  Recipients extraction from .csv file with view support
+- [ ]  View and Download Logs of the bulk mail tasks
+- [ ]  Send mail with/without attachments
+- [ ]  Send plainText/HTML mails
 
 <br>
 
 
 ## Instructions to run
 
-* Pre-requisites:
-	-  < insert pre-requisite >
-	-  < insert pre-requisite >
-
-* < directions to install > 
+* Setup up Python env
+		
 ```bash
-< insert code >
-```
+ pip install virtualenv
+	virtualenv env
+```  
+* Activate Environment
+	- Windows
+	```bash
+	cd env/Scripts && activate
+	```
+	- Linux
+	```bash
+	$ source ./env/Scripts/activate
+	```
 
-* < directions to execute >
+* Install package
 
 ```bash
-< insert code >
+ pip install MailerGui
 ```
 
 <br>
 
 ## Contributors
 
-* [ < INSERT NAME HERE > ](INSERT_PROFILE_URL_HERE)
-* [ < INSERT NAME HERE > ](INSERT_PROFILE_URL_HERE)
-
+* [Geek-Ubaid](https://github.com/Geek-ubaid)
 
 
 <br>
