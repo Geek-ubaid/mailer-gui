@@ -28,7 +28,7 @@
 		
 ```bash
  pip install virtualenv
-	virtualenv env
+ virtualenv env
 ```  
 * Activate Environment
 	- Windows
@@ -37,16 +37,39 @@
 	```
 	- Linux
 	```bash
-	$ source ./env/Scripts/activate
+	source ./env/Scripts/activate
 	```
 
-* Install package
-
-```bash
- pip install MailerGui
-```
+* Install from pip package(WIP)
+  ```bash
+  pip install MailerGui
+  ```
+	
+	or
 
 <br>
+<br>
+
+- Build from source
+	- clone the repo
+	```bash
+	git clone repo_name 
+	```
+	- Change the working directory
+	```bash
+	cd MailerGui
+	```
+	- Install all the requirements in the active environment
+	```bash
+	pip install -r requirements.txt
+	```
+	- Run the program by executing
+	```bash
+	python main_gui.py
+	```
+	
+<br>
+
 
 ## Contributors
 
