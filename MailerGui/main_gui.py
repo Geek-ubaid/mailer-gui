@@ -9,6 +9,7 @@ from dotenv import load_dotenv
 import pandas as pd
 
 #importing interface
+import wordprocessor
 from test import Render
 from Screens import viewSummary
 from Interface.login import Ui_loginwindow
@@ -163,7 +164,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         attachment_file = os.path.basename(self.attachment_file)
         
         self.summary_window = SummaryScreen(template_file=template_file, \
-                        placeholders=placeholders,\
+                        placeholder=placeholders,\
                         total_recipient=total_recipient,\
                         subject=subject,\
                         attachment_file=attachment_file)
@@ -177,11 +178,11 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         
     def show_template_file(self):
         
-        with open(self.template_file,encoding='utf-8') as file:
-            render = Render(file.read())
-            print(render.html)
-         
-        
+        # with open(self.template_file,encoding='utf-8') as file:
+        #     render = Render(file.read())
+        #     print(render.html) 
+        wordprocessor.main(self.template_file)
+          
         
     def get_template_file(self):
         options = QtWidgets.QFileDialog.Options()
@@ -201,7 +202,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         self.attachment_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, \
-            "Select File to upload", "","All Files (*);", options=options)
+            "Select File to upload", "","All Files (*)", options=options)
         if self.attachment_file:
             try:
                 file_name = os.path.basename(self.attachment_file)
@@ -217,7 +218,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
 
 
     def extract_recipients(self):
-        
+    
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         self.recipient_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, \
@@ -261,6 +262,7 @@ class SummaryScreen(QtWidgets.QDialog,summaryScreen.Ui_Dialog):
         super(SummaryScreen,self).__init__()
         self.setupUi(self)
         self.items = kwargs
+        self.set_table_items()
         
     def set_table_items(self):
             
@@ -268,21 +270,21 @@ class SummaryScreen(QtWidgets.QDialog,summaryScreen.Ui_Dialog):
         subject = self.items['subject']
         template_file = self.items ['template_file']
         placeholder = self.items['placeholder']
-        total_recipient = self.item['total_recipients']
+        total_recipient = self.items['total_recipient']
         
-        item = self.summary_table.item(0, 1)
-        item.setText(template_file)
-        item = self.summary_table.item(1, 1)
-        item.setText(placeholder)
-        item = self.summary_table.item(2, 1)
-        item.setText(total_recipient)
-        item = self.summary_table.item(3, 1)
-        item.setText(subject)
-        item = self.summary_table.item(4, 1)
-        item.setText(attachment_file)
-        
+        item = QtWidgets.QTableWidgetItem(str(template_file)) 
+        self.summary_table.setItem(0,1,item)
+        item = QtWidgets.QTableWidgetItem(str(placeholder))
+        self.summary_table.setItem(1,1,item)
+        item = QtWidgets.QTableWidgetItem(str(total_recipient))
+        self.summary_table.setItem(2,1,item)
+        item = QtWidgets.QTableWidgetItem(str(subject))
+        self.summary_table.setItem(3,1,item)
+        item = QtWidgets.QTableWidgetItem(str(attachment_file))
+        self.summary_table.setItem(4,1,item)
         
 if __name__ == '__main__':
+    
     import sys
     global app
     app = QtWidgets.QApplication(sys.argv)
