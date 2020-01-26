@@ -45,12 +45,9 @@
   pip install MailerGui
   ```
 	
-	or
 
-<br>
-<br>
 
-- Build from source
+- You can also Build from source (Current Scenario)
 	- clone the repo
 	```bash
 	git clone repo_name 
