@@ -1,0 +1,5 @@
+__pycache__
+env/
+MailerGui/.env
+MailerGui/wordprocessor.py
+MailerGui/Data/images/
