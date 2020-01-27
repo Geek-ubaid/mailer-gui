@@ -49,7 +49,7 @@
 
 ```bash
 # your login credentials to MailerGui
-LOGIN
+LOGIN_NAME
 
 # your password
 PASSKEY
