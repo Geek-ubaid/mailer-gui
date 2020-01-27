@@ -6,7 +6,6 @@ import os
 
 import base64
 import sendgrid
-from celery import Celery
 from dotenv import load_dotenv
 from sendgrid.helpers.mail import *
 
