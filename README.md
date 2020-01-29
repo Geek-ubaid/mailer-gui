@@ -45,6 +45,20 @@
   pip install MailerGui
   ```
 	
+* Add the following variables to your PATH:
+
+```bash
+# your login credentials to MailerGui
+LOGIN_NAME
+
+# your password
+PASSKEY
+
+# sendgrid API key
+API_KEY
+```
+
+Find a sample of the environment variables [here](./MailerGui/.env.sample)
 
 
 - You can also Build from source (Current Scenario)

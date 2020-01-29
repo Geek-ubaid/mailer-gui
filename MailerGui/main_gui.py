@@ -4,13 +4,13 @@ warnings.filterwarnings('ignore')
 import os
 import csv
 
-from PyQt5 import QtGui,QtWidgets,QtCore,QtWebEngineWidgets
+from PyQt5 import QtGui,QtWidgets,QtCore
 from dotenv import load_dotenv
 import pandas as pd
 
 #importing interface
-import wordprocessor
-from test import Render
+#import wordprocessor
+# from test import Render
 from Screens import viewSummary
 from Interface.login import Ui_loginwindow
 from Interface.mainScreen import Ui_MainWindow 
@@ -181,7 +181,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         # with open(self.template_file,encoding='utf-8') as file:
         #     render = Render(file.read())
         #     print(render.html) 
-        wordprocessor.main(self.template_file)
+        #wordprocessor.main(self.template_file)
+        pass
           
         
     def get_template_file(self):
