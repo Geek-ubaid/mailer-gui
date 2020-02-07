@@ -3,3 +3,4 @@ env/
 MailerGui/.env
 MailerGui/wordprocessor.py
 MailerGui/Data/images/
+venv
