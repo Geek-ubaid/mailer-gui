@@ -9,22 +9,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-try:
-    _fromUtf8 = QtCore.QString.fromUtf8
-except AttributeError:
-    def _fromUtf8(s):
-        return s
-
-try:
-    _encoding = QtWidgets.QApplication.UnicodeUTF8
-
-    def _translate(context, text, disambig):
-        return QtWidgets.QApplication.translate(context, text, disambig,
-                                                _encoding)
-except AttributeError:
-    def _translate(context, text, disambig):
-        return QtWidgets.QApplication.translate(context, text, disambig)
-
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -39,6 +23,8 @@ class Ui_Dialog(object):
         self.label.setObjectName("label")
         self.recipients_view_box = QtWidgets.QTableView(Dialog)
         self.recipients_view_box.setGeometry(QtCore.QRect(9, 39, 621, 441))
+        self.recipients_view_box.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.recipients_view_box.setSizeAdjustPolicy(QtWidgets.QAbstractScrollArea.AdjustToContents)
         self.recipients_view_box.setObjectName("recipients_view_box")
 
         self.retranslateUi(Dialog)
@@ -50,11 +36,11 @@ class Ui_Dialog(object):
         self.label.setText(_translate("Dialog", "Recipients details"))
 
 
-# if __name__ == "__main__":
-#     import sys
-#     app = QtWidgets.QApplication(sys.argv)
-#     Frame = QtWidgets.QFrame()
-#     ui = Ui_Frame()
-#     ui.setupUi(Frame)
-#     Frame.show()
-#     sys.exit(app.exec_())
+if __name__ == "__main__":
+    import sys
+    app = QtWidgets.QApplication(sys.argv)
+    Frame = QtWidgets.QFrame()
+    ui = Ui_Frame()
+    ui.setupUi(Frame)
+    Frame.show()
+    sys.exit(app.exec_())

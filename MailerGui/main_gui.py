@@ -3,14 +3,20 @@ warnings.filterwarnings('ignore')
 
 import os
 import csv
+import json
 
-from PyQt5 import QtGui,QtWidgets,QtCore
+
 from dotenv import load_dotenv
 import pandas as pd
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtWebKit import *
+from PyQt5.QtWebKitWidgets import *
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 #importing interface
-#import wordprocessor
-# from test import Render
 from Screens import viewSummary
 from Interface.login import Ui_loginwindow
 from Interface.mainScreen import Ui_MainWindow 
@@ -19,6 +25,7 @@ from Interface import recipientScreen
 from Screens.utils import mailto
 from Screens.modelDataframe import PandasModel
 from Interface import progressScreen
+from Screens import test_send
 
 load_dotenv()
 
@@ -112,8 +119,13 @@ def show_messagebox(x):
     elif x == 10:
         message.setText('Template added succesfully!')
         message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-        
-    
+    elif x == 11:
+        message.setText('Tick the verify box before sending!!')
+        message.setIcon(QtWidgets.QMessageBox.Warning)
+        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    elif x == 12:
+        message.setText('Test mail sent succesfully!')
+        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
     return message.exec_()
     
 
@@ -126,8 +138,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.recipient_file = ''
         self.attachment_file = ''
         self.template_file = ''
-        self.placeholder = ''
         self.subject = ''
+        self.recipients_df = ''
         
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon(r'gdg.png'))
@@ -139,8 +151,9 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.attachment_button.clicked.connect(self.get_attachment_file)
         self.view_button.clicked.connect(self.show_recipients)
         self.add_template_button.clicked.connect(self.get_template_file)
-        self.edit_button.clicked.connect(self.show_template_file)
-        self.view_summary_buttton.clicked.connect(self.show_summary)
+        self.edit_button.clicked.connect(self.view_html_file)
+        self.send_bulk_button.clicked.connect(self.show_summary)
+        self.test_send_button.clicked.connect(self.send_test_mail)
         # self.send_email.clicked.connect(self.sendmail)
         
         finish = QtWidgets.QAction("Quit",self)
@@ -153,14 +166,20 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         else:
             event.ignore()
             self.close()
-            
+
+    def view_html_file(self):
+     
+        self.web = QWebView()
+        self.web.load(QUrl.fromLocalFile(self.template_file))
+        self.web.show()
+                    
     def show_summary(self):
         
         summary = viewSummary.GenerateSummary()
-        total_recipient = summary.return_total_recipients()
-        placeholders = summary.return_placeholder_text()
+        total_recipient = summary.return_total_recipients(self.recipients_df)
+        placeholders = summary.return_placeholder_text(self.placeholder_text.toPlainText())
         template_file = os.path.basename(self.template_file)
-        subject = self.subject
+        subject = self.subject_text.text()
         attachment_file = os.path.basename(self.attachment_file)
         
         self.summary_window = SummaryScreen(template_file=template_file, \
@@ -175,14 +194,6 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
            
         self.recipient_window = RecipientWindow(self.recipients_df)
         self.recipient_window.exec_()
-        
-    def show_template_file(self):
-        
-        # with open(self.template_file,encoding='utf-8') as file:
-        #     render = Render(file.read())
-        #     print(render.html) 
-        #wordprocessor.main(self.template_file)
-        pass
           
         
     def get_template_file(self):
@@ -236,9 +247,18 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             self.recipients_label.setText(file_name)
         else:
             show_messagebox(5)
-
-
-
+    
+    def send_test_mail(self):
+        
+        to_mail = self.test_email_label.text() 
+        message = open(self.template_file).read()
+        res = test_send.send_complex_message(to_mail,"dscvitvellore@gmail.com",self.subject_text.text(),\
+            message)
+        
+        if (res.status_code == 200):
+            show_messagebox(12)
+        
+        
 
 class RecipientWindow(recipientScreen.Ui_Dialog,QtWidgets.QDialog):
     
@@ -260,30 +280,43 @@ class RecipientWindow(recipientScreen.Ui_Dialog,QtWidgets.QDialog):
 class SummaryScreen(QtWidgets.QDialog,summaryScreen.Ui_Dialog):
     
     def __init__(self,**kwargs):
+        
         super(SummaryScreen,self).__init__()
         self.setupUi(self)
         self.items = kwargs
         self.set_table_items()
+        self.send_mail_button.clicked.connect(self.send_mail_bulk)
         
     def set_table_items(self):
             
-        attachment_file = self.items['attachment_file']
-        subject = self.items['subject']
-        template_file = self.items ['template_file']
-        placeholder = self.items['placeholder']
-        total_recipient = self.items['total_recipient']
+        self.attachment_file = self.items['attachment_file']
+        self.subject = self.items['subject']
+        self.template_file = self.items ['template_file']
+        self.placeholder = self.items['placeholder']
+        self.total_recipient = self.items['total_recipient']
         
-        item = QtWidgets.QTableWidgetItem(str(template_file)) 
+        item = QtWidgets.QTableWidgetItem(str(self.template_file)) 
         self.summary_table.setItem(0,1,item)
-        item = QtWidgets.QTableWidgetItem(str(placeholder))
+        item = QtWidgets.QTableWidgetItem(str(self.placeholder))
         self.summary_table.setItem(1,1,item)
-        item = QtWidgets.QTableWidgetItem(str(total_recipient))
+        item = QtWidgets.QTableWidgetItem(str(self.total_recipient))
         self.summary_table.setItem(2,1,item)
-        item = QtWidgets.QTableWidgetItem(str(subject))
+        item = QtWidgets.QTableWidgetItem(str(self.subject))
         self.summary_table.setItem(3,1,item)
-        item = QtWidgets.QTableWidgetItem(str(attachment_file))
+        item = QtWidgets.QTableWidgetItem(str(self.attachment_file))
         self.summary_table.setItem(4,1,item)
+    
+    def send_mail_bulk(self):
         
+        if self.verify_box.isChecked():
+            print('starting')
+            
+        else:
+            show_messagebox(11)
+        
+        
+        
+
 if __name__ == '__main__':
     
     import sys
