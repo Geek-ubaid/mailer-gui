@@ -2,6 +2,7 @@ import warnings
 warnings.filterwarnings('ignore')
 
 import os
+import sys
 import csv
 import json
 
@@ -17,15 +18,15 @@ from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 #importing interface
-from Screens import viewSummary
 from Interface.login import Ui_loginwindow
 from Interface.mainScreen import Ui_MainWindow 
 from Interface import summaryScreen
 from Interface import recipientScreen
+from Interface import progressScreen
+from Screens import viewSummary
+from Screens import test_send
 from Screens.utils import mailto
 from Screens.modelDataframe import PandasModel
-from Interface import progressScreen
-from Screens import test_send
 
 load_dotenv()
 
@@ -126,6 +127,10 @@ def show_messagebox(x):
     elif x == 12:
         message.setText('Test mail sent succesfully!')
         message.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    elif x == 13:
+        message.setText('Please enter all details before proceeding!!')
+        message.setIcon(QtWidgets.QMessageBox.Warning)
+        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
     return message.exec_()
     
 
@@ -165,12 +170,13 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             event.accept()         
         else:
             event.ignore()
-            self.close()
+            sys.exit()
 
     def view_html_file(self):
      
         self.web = QWebView()
         self.web.load(QUrl.fromLocalFile(self.template_file))
+        self.web.setWindowTitle(os.path.basename(self.template_file))
         self.web.show()
                     
     def show_summary(self):
@@ -283,6 +289,11 @@ class SummaryScreen(QtWidgets.QDialog,summaryScreen.Ui_Dialog):
         
         super(SummaryScreen,self).__init__()
         self.setupUi(self)
+        # self.attachment_file = ''
+        # self.subject = ''
+        # self.template_file = ''
+        # self.placeholder = ''
+        # self.total_recipient = 0
         self.items = kwargs
         self.set_table_items()
         self.send_mail_button.clicked.connect(self.send_mail_bulk)
@@ -309,12 +320,73 @@ class SummaryScreen(QtWidgets.QDialog,summaryScreen.Ui_Dialog):
     def send_mail_bulk(self):
         
         if self.verify_box.isChecked():
-            print('starting')
+            if(self.total_recipient and self.template_file):
+                print('starting')
+                self.close()
+                self.progWindow = ProgressWindow()
+                self.progWindow.setLabelText('Sending Mail in Progress...')
+            else:
+                show_messagebox(13)
+                
+            # try:
+            #     self.progWindow.callProgram('python',['refreshLists.py'], 6)
+            # except:
+            #     self.progWindow.callProgram('python3',['refreshLists.py'], 6)
             
         else:
             show_messagebox(11)
         
+class Stream(QtCore.QObject):
+    newText = QtCore.pyqtSignal(str)
+
+    def write(self, text):
+        self.newText.emit(str(text))
         
+class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
+    
+    """This class is for showing the progress of all the events happening in the interface"""
+    
+    def __init__(self):
+
+        super(ProgressWindow, self).__init__()
+        self.setupUi(self)
+        self.continue_button.setEnabled(False)
+        self.setLabelText('Sending mails ...')
+        self.continue_button.clicked.connect(self.continueFn)
+        sys.stdout = Stream(newText=self.dataReady)
+        self.throw_output()
+
+    def continueFn(self):
+        pass
+  
+    def setLabelText(self, text):
+        self.labelProgress.setText(text)
+
+    def dataReady(self,text):    
+        cursor = self.logs_view.textCursor()
+        cursor.movePosition(cursor.End)
+        cursor.insertText(text)
+        self.logs_view.setTextCursor(cursor)
+        self.logs_view.ensureCursorVisible()
+    
+    def __del__(self):
+        sys.stdout = sys.__stdout__
+        
+    def throw_output(self):
+        for i in range(10000):
+            print(i)
+        
+    # def onStart(self,ver,processList):
+    #     self.progressBar.setRange(0,0)
+    #     self.process.start(ver,processList)
+        
+    # def onFinished(self):
+    #     self.progressBar.setRange(0,1)
+    #     self.progressBar.setValue(1)
+
+ 
+       
+
         
 
 if __name__ == '__main__':
