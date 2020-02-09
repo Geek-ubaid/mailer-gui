@@ -11,13 +11,13 @@
 
 ## Functionalities
 - [ ]  Send Bulk Mail at once
-- [ ]  Send test mail to any email
-- [ ]  View and edit HTML template
+- [X]  Send test mail to any email
+- [X]  View and edit HTML template
 - [ ]  Set Placeholder values for the template
-- [ ]  Recipients extraction from .csv file with view support
+- [X]  Recipients extraction from .csv file with view support
 - [ ]  View and Download Logs of the bulk mail tasks
-- [ ]  Send mail with/without attachments
-- [ ]  Send plainText/HTML mails
+- [X]  Send mail with/without attachments
+- [X]  Send plainText/HTML mails
 
 <br>
 
