@@ -10,11 +10,11 @@ load_dotenv()
 EXTENSION_TO_TYPE = {'pdf':'document/pdf', 'jpg':'image/jpg', 'png':'image/png', \
     'jpeg':'image/jpeg', 'docx':'document/docx'}
 
-def send_complex_message(to_mail,from_mail,subject,message,attach=False):
+def send_test_mail(to_mail,from_mail,subject,message,attach=False):
     
     if attach:
         attach_file_name = os.path.basename(attach) 
-        attach_type = EXTENSION_TO_TYPE[attach_file_name.split('.')[-1]]
+        attach_type = EXTENSION_TO_TYPE[str(attach_file_name.split('.')[-1]).lower()]
         attach_content = open(attach,'rb').read()
     
         return requests.post(

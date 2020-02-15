@@ -165,7 +165,10 @@ class Ui_MainWindow(object):
         self.actionQuit.setObjectName("actionQuit")
         self.actionLogs = QtWidgets.QAction(MainWindow)
         self.actionLogs.setObjectName("actionLogs")
+        self.actionSettings = QtWidgets.QAction(MainWindow)
+        self.actionSettings.setObjectName("actionSettings")
         self.menuFile.addAction(self.actionQuit)
+        self.menuFile.addAction(self.actionSettings)
         self.menuDownload.addSeparator()
         self.menuDownload.addAction(self.actionSample_Recipient)
         self.menuDownload.addAction(self.actionLogs)
@@ -215,6 +218,8 @@ class Ui_MainWindow(object):
         self.actionQuit.setShortcut(_translate("MainWindow", "Ctrl+Q"))
         self.actionLogs.setText(_translate("MainWindow", "Logs"))
         self.actionLogs.setShortcut(_translate("MainWindow", "Ctrl+L"))
+        self.actionSettings.setText(_translate("MainWindow", "Settings"))
+        self.actionSettings.setShortcut(_translate("MainWindow", "Ctrl+S"))
 
 
 if __name__ == "__main__":
