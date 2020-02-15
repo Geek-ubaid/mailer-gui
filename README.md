@@ -82,6 +82,7 @@ This window will show real time logs of the bulk process. This will help the use
 </p>
 </details>
 
+<br>
 
 ## Instructions to run
 
