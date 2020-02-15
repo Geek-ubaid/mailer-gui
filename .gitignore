@@ -4,3 +4,7 @@ MailerGui/.env
 MailerGui/wordprocessor.py
 MailerGui/Data/images/
 venv
+test.py
+test_stream.py
+test_stream2.py
+.vscode
