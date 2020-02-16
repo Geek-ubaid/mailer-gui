@@ -58,7 +58,7 @@ def main(data):
         message = file.read()
         
     df = pd.read_csv(recipient_file)
-    recipients = list(df['email'].values)
+    recipients = list(df['Email'].values)
     
     send_bulk_mail(recipients, os.getenv('FROM_MAIL'), subject, message)
         

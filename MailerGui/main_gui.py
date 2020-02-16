@@ -41,7 +41,7 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
     def __init__(self,parent=None):
         super(Loginwindow, self).__init__(parent)
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon(r'Data\gdg.png'))
+        self.setWindowIcon(QtGui.QIcon(r'Data\dsc.png'))
         self.setWindowTitle("Developer Students Club")
         self.login.clicked.connect(self.login_check)
         self.reset.clicked.connect(self.reset_check)
@@ -125,13 +125,25 @@ def show_messagebox(x):
         message.setText('Test mail sent succesfully!')
         message.setStandardButtons(QtWidgets.QMessageBox.Ok)
     elif x == 13:
-        message.setText('Please enter recipeints details before proceeding!!')
+        message.setText('Please enter complete details before proceeding!!')
         message.setIcon(QtWidgets.QMessageBox.Warning)
         message.setStandardButtons(QtWidgets.QMessageBox.Ok)
     elif x == 14:
         message.setText('Set all the config before proceeding')
         message.setIcon(QtWidgets.QMessageBox.Warning)
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)  
+        message.setStandardButtons(QtWidgets.QMessageBox.Ok) 
+    elif x == 15:
+        message.setText('Are you sure you wan to cancel the operation?')
+        message.setIcon(QtWidgets.QMessageBox.Question)
+        message.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No) 
+    elif x == 16:
+        message.setText('Please enter test mail!!')
+        message.setIcon(QtWidgets.QMessageBox.Warning)
+        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    elif x == 17:
+        message.setText('Test Message Not sent!!')
+        message.setIcon(QtWidgets.QMessageBox.Warning)
+        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
     return message.exec_()
     
 class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
@@ -147,7 +159,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.recipients_df = ''
         
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon(r'Data\gdg.png'))
+        self.setWindowIcon(QtGui.QIcon(r'Data\dsc.png'))
         self.setWindowTitle("MailerGUI")
         self.recipients_label.setText(self.recipient_file)
         self.attachment_label.setText(self.attachment_file)
@@ -159,24 +171,43 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.edit_button.clicked.connect(self.view_html_file)
         self.send_bulk_button.clicked.connect(self.show_summary)
         self.test_send_button.clicked.connect(self.send_test_mail)
-        # self.send_email.clicked.connect(self.sendmail)
+        self.actionSettings.triggered.connect(self.show_settings)
+        self.actionQuit.triggered.connect(self.close_window)
+        self.actionSample_Recipient.triggered.connect(self.show_sample_csv)
         
         finish = QtWidgets.QAction("Quit",self)
         finish.triggered.connect(self.close_window)
 
     def close_window(self, event):
         if show_messagebox(4) == YES :
-            event.accept()         
+            sys.exit()         
         else:
-            event.ignore()
-            sys.exit()
+            pass
+    
+    def show_settings(self):
+        settings_window = SettingScreen()
+        settings_window.exec_()
 
     def view_html_file(self):
         self.web = QWebView()
         self.web.load(QUrl.fromLocalFile(self.template_file))
         self.web.setWindowTitle(os.path.basename(self.template_file))
         self.web.show()
-                    
+        
+    def show_sample_csv(self):
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        name = QtWidgets.QFileDialog.getSaveFileName(None, 'Save File',
+                                                     'Sample.csv',
+                                                     'CSV (*.csv)', options=options)[0]
+        if name:
+            file = open(name,'w')
+            writer = csv.writer(file)
+            writer.writerow(["Name","Email","Phone No"])
+            file.close()   
+        else:
+            pass       
+         
     def show_summary(self):
         summary = viewSummary.GenerateSummary()
         total_recipient = summary.return_total_recipients(self.recipients_df)
@@ -253,13 +284,26 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
     
     def send_test_mail(self):
         
-        to_mail = self.test_email_label.text() 
-        message = open(self.template_file).read()
-        placeholder_text = json.loads(self.placeholder_text.toPlainText())
-        res = test_send.send_test_mail(to_mail,os.getenv('FROM_MAIL'),self.subject_text.text(),\
-                message)        
-        if (res.status_code == 200):
-            show_messagebox(12)
+        if self.template_file:
+            if self.test_email_label.text():
+                to_mail = self.test_email_label.text() 
+                message = open(self.template_file).read()
+                placeholder_text = json.loads(self.placeholder_text.toPlainText())
+                try:
+                    res = test_send.send_test_mail(to_mail,os.getenv('FROM_MAIL'),self.subject_text.text(),\
+                            message)        
+                    if (res.status_code == 200):
+                        show_messagebox(12)
+                    else:
+                        show_messagebox(17)
+                        self.test_email_label.clear()
+                except:
+                    show_messagebox(17)
+                    self.test_email_label.clear()
+            else:
+                show_messagebox(16)
+        else:
+           show_messagebox(13) 
         
         
 
@@ -342,7 +386,7 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
     """This class is for changing the configuration or settings of the mail account"""
     def __init__(self):
         super(SettingScreen, self).__init__()
-        self.setupUi()
+        self.setupUi(self)
         self.apply_button.clicked.connect(self.set_env_variables)
         self.accept_button.clicked.connect(self.confirm_variables)
         
@@ -373,11 +417,20 @@ class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
         self.process.finished.connect(
             lambda: self.stop_button.setEnabled(False))
         self.process.finished.connect(self.onFinished)
-        self.continue_button.clicked.connect(self.continueFn)
+        self.continue_button.clicked.connect(self.continue_function)
+        self.stop_button.clicked.connect(self.stop_function)
         
-    def continueFn(self):
+    def continue_function(self):
         self.close()
   
+    def stop_function(self):
+        response = show_messagebox(15)
+        if response == YES:
+            self.process.kill
+            self.close()
+        else:
+            pass
+            
     def setLabelText(self, text):
         self.labelProgress.setText(text)
 
@@ -388,7 +441,6 @@ class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
         cursor.insertText(str_data)
         # self.logs_view.ensureCursorVisible()
         
-        
     def onStart(self,ver,processList):
         self.progressBar.setRange(0,0)
         self.process.start(ver,processList)
@@ -397,7 +449,6 @@ class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
         self.progressBar.setRange(0,1)
         self.progressBar.setValue(1)
 
-    
     def callProgram(self, ver, processList):
        self.onStart(ver,processList)
 
