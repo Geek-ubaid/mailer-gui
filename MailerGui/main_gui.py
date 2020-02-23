@@ -5,16 +5,18 @@ import os
 import sys
 import csv
 import json
+import logging
 
-from dotenv import load_dotenv
+import qdarkstyle
 import pandas as pd
-from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
 from PyQt5.QtWebKit import *
+from PyQt5.QtWidgets import *
+from dotenv import load_dotenv
 from PyQt5.QtWebKitWidgets import *
-from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
 
 #importing interface
 from Interface.login import Ui_loginwindow
@@ -23,6 +25,7 @@ from Interface import summaryScreen
 from Interface import recipientScreen
 from Interface import progressScreen
 from Interface import settingScreen
+from Interface import beginScreen
 from Screens import viewSummary
 from Screens import test_send
 from Screens.utils import mailto
@@ -30,31 +33,56 @@ from Screens.modelDataframe import PandasModel
 
 load_dotenv()
 
-LOGIN_NAME = os.getenv('LOGIN_NAME')
-PASSKEY = os.getenv('PASSKEY')
 YES = QtWidgets.QMessageBox.Yes
 OK = QtWidgets.QMessageBox.Ok
 CLOSE = QtWidgets.QMessageBox.Close
 
+class SetupWindow(QtWidgets.QDialog,beginScreen.Ui_Dialog):
+    
+    def __init__(self):
+        super(SetupWindow,self).__init__(parent=None)
+        self.setupUi(self)
+        self.setWindowIcon(QtGui.QIcon(r'Data\logo-mailer.png'))
+        self.setWindowTitle("Welcome to MailerGUI")
+        self.start_button.clicked.connect(self.show_settings)
+        finish = QtWidgets.QAction("Quit",self)
+        finish.triggered.connect(self.close_window)
+    
+    def show_settings(self):
+        setting_window = SettingScreen(0)
+        self.close()
+        setting_window.exec_()
+    
+    def close_window(self):
+        global app
+        sys.exit(app.exec_())
+        
 class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
 
     def __init__(self,parent=None):
         super(Loginwindow, self).__init__(parent)
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon(r'Data\dsc.png'))
-        self.setWindowTitle("Developer Students Club")
+        self.setWindowIcon(QtGui.QIcon(r'Data\logo-mailer.png'))
+        self.setWindowTitle("MailerGUI")
         self.login.clicked.connect(self.login_check)
         self.reset.clicked.connect(self.reset_check)
+        finish = QtWidgets.QAction("Quit",self)
+        finish.triggered.connect(self.close_window)
         
     def check_for_env(self):
-        if os.path.isfile('.env'):
+        if os.getenv('LOGIN_NAME') and os.getenv('PASSKEY'):
+            print('present')
             return True
         else:
             return False
 
     def login_check(self):
-        passkey = self.pass1.text()
+        
+        LOGIN_NAME = os.getenv('LOGIN_NAME')
+        PASSKEY = os.getenv('PASSKEY')
+        passkey = self.password_text.text()
         username = self.user.text()
+        print(passkey,username)
         if (username == LOGIN_NAME and passkey == PASSKEY):
             try:
                 self.window = MainWindow()
@@ -72,8 +100,12 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
                     pass
                 
     def reset_check(self):
-        self.pass1.setText("")
+        self.password_text.setText("")
         self.user.setText("")
+    
+    def close_window(self):
+        global app
+        sys.quit()
 
 
 def show_messagebox(x):
@@ -159,7 +191,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.recipients_df = ''
         
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon(r'Data\dsc.png'))
+        self.setWindowIcon(QtGui.QIcon(r'Data\logo-mailer.png'))
         self.setWindowTitle("MailerGUI")
         self.recipients_label.setText(self.recipient_file)
         self.attachment_label.setText(self.attachment_file)
@@ -185,7 +217,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             pass
     
     def show_settings(self):
-        settings_window = SettingScreen()
+        settings_window = SettingScreen(1)
         settings_window.exec_()
 
     def view_html_file(self):
@@ -344,7 +376,6 @@ class SummaryScreen(QtWidgets.QDialog,summaryScreen.Ui_Dialog):
         self.placeholder = self.items['placeholder']
         self.total_recipient = self.items['total_recipient']
         self.recipient_file = self.items['recipient_file']
-        
         item = QtWidgets.QTableWidgetItem(str(os.path.basename(self.template_file))) 
         self.summary_table.setItem(0,1,item)
         item = QtWidgets.QTableWidgetItem(str(self.placeholder))
@@ -384,18 +415,44 @@ class SummaryScreen(QtWidgets.QDialog,summaryScreen.Ui_Dialog):
 class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
     
     """This class is for changing the configuration or settings of the mail account"""
-    def __init__(self):
+    def __init__(self, startmode):
         super(SettingScreen, self).__init__()
         self.setupUi(self)
+        self.start_mode = startmode
         self.apply_button.clicked.connect(self.set_env_variables)
-        self.accept_button.clicked.connect(self.confirm_variables)
+        self.ok_button.clicked.connect(self.confirm_variables)
+        if startmode == 0:
+            self.cancel_button.setEnabled(False)
+        else:
+            self.cancel_button.setEnabled(True)
+        self.cancel_button.clicked.connect(self.cancel_operation)
+        
+    def set_setting_values(self):
+        pass
+        
+    def cancel_operation(self):
+        self.close()
         
     def confirm_variables(self):
-        self.close()
+        if self.start_mode == 0:
+            login_window = Loginwindow()
+            self.close()
+            login_window.exec_()
+        else:
+            self.close()
     
     def set_env_variables(self):
-        with open('.env','w') as file:
-            pass
+        username_response = self.username_box.text()
+        password_response = self.password_box.text()
+        api_key = self.apikey_box.text()
+        mail_domain = self.domain_box.text()
+        if self.sendgrid_check.isChecked():
+            mail_provider = 'Sendgrid'
+        elif self.mailgun_check.isChecked():
+            mail_provider = 'MailGun'
+        os.environ['LOGIN_NAME'] = username_response
+        os.environ['PASSKEY'] = password_response
+        
             
         
 class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
@@ -457,14 +514,15 @@ class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
 
 if __name__ == '__main__':
     
-    import sys
     global app
     app = QtWidgets.QApplication(sys.argv)
-    window= Loginwindow()
-    
-    # if window.check_for_env():
-    #     settings_window = SettingScreen()
-    #     settings_window.show()
+    app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
+    app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt5'))
+    window = Loginwindow()
+    if not(window.check_for_env()):
+        begin_window = SetupWindow()
+        begin_window.show()
+    else:
+        window.show()
         
-    window.show()
     sys.exit(app.exec_())

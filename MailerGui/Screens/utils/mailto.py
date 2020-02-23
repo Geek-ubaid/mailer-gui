@@ -14,7 +14,7 @@ load_dotenv()
 API_KEY = os.getenv('API_KEY')
 
 def emailAll(sender,tos,message,subject,attach=False):
-    sg = sendgrid.SendGridAPIClient(apikey=API_KEY)
+    sg = sendgrid.SendGridAPIClient(apikey='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')
     from_email = Email(sender)
     content = Content("text/html",message)
     if(bool(attach)):
@@ -42,7 +42,7 @@ def emailAll(sender,tos,message,subject,attach=False):
                 pass
 
 def email(sender,to,message,subject,attach=False):
-    sg = sendgrid.SendGridAPIClient(apikey=API_KEY)
+    sg = sendgrid.SendGridAPIClient(apikey='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')
     from_email = Email(sender)
     to_email = Email(to)
     content = Content("text/html",message)
@@ -82,9 +82,9 @@ def email(sender,to,message,subject,attach=False):
 if __name__  == "__main__":
      
     from_mail = "dscvitvellore@gmail.com"
-    to_email = "usmaniubaid@gmail.com"
+    to_email = "ubaid.usmani2017@vitstudent.ac.in"
     subject = "test"
-    message = "hello" ## html for html content or text for text content
+    message = open(r'C:\Users\HP\Downloads\WT Mailer (1).html').read() ## html for html content or text for text content
     attach = "" ## file path
     
     email(from_mail, to_email, message, subject) ## skip attach if attach is not available
