@@ -27,7 +27,7 @@ from Interface import progressScreen
 from Interface import settingScreen
 from Interface import beginScreen
 from Screens import viewSummary
-from Screens import test_send
+from Screens import Send_test
 from Screens.utils import mailto
 from Screens.modelDataframe import PandasModel
 
@@ -38,6 +38,8 @@ OK = QtWidgets.QMessageBox.Ok
 CLOSE = QtWidgets.QMessageBox.Close
 
 class SetupWindow(QtWidgets.QDialog,beginScreen.Ui_Dialog):
+    
+    """ This class if for changing the settings of the mailer """
     
     def __init__(self):
         super(SetupWindow,self).__init__(parent=None)
@@ -58,6 +60,8 @@ class SetupWindow(QtWidgets.QDialog,beginScreen.Ui_Dialog):
         sys.exit(app.exec_())
         
 class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
+    
+    """ This Class is for login and authentication of user """
 
     def __init__(self,parent=None):
         super(Loginwindow, self).__init__(parent)
@@ -105,7 +109,7 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
     
     def close_window(self):
         global app
-        sys.quit()
+        sys.exit()
 
 
 def show_messagebox(x):
@@ -198,6 +202,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.lineEdit.setText(self.template_file)
         self.extract_button.clicked.connect(self.extract_recipients)
         self.attachment_button.clicked.connect(self.get_attachment_file)
+        self.reset_attachment_button.clicked.connect(self.reset_attachment_file)
         self.view_button.clicked.connect(self.show_recipients)
         self.add_template_button.clicked.connect(self.get_template_file)
         self.edit_button.clicked.connect(self.view_html_file)
@@ -206,6 +211,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.actionSettings.triggered.connect(self.show_settings)
         self.actionQuit.triggered.connect(self.close_window)
         self.actionSample_Recipient.triggered.connect(self.show_sample_csv)
+        self.actionReset_Attachment.triggered.connect(self.reset_attachment_file)
+        self.actionReset_All.triggered.connect(self.reset_all)
         
         finish = QtWidgets.QAction("Quit",self)
         finish.triggered.connect(self.close_window)
@@ -215,6 +222,25 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             sys.exit()         
         else:
             pass
+        
+    def reset_all(self):
+        
+        self.attachment_label.setText('')
+        self.subject_text.setText('')
+        self.lineEdit.setText('')
+        self.test_email_label.setText('')
+        self.recipients_label.setText('')
+        self.placeholder_text.setText('''
+                                      {
+                                        "key1" : "value1",
+                                        "key2" : "value2"
+                                      }
+                                      ''')
+    
+        self.recipient_file = ''
+        self.attachment_file = ''
+        self.template_file = ''
+        self.subject = ''
     
     def show_settings(self):
         settings_window = SettingScreen(1)
@@ -241,10 +267,12 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             pass       
          
     def show_summary(self):
-        summary = viewSummary.GenerateSummary()
-        total_recipient = summary.return_total_recipients(self.recipients_df)
+        self.summary = viewSummary.GenerateSummary()
+        if self.recipient_file:
+            total_recipient = self.summary.return_total_recipients(self.recipients_df)
         recipient_file = self.recipient_file
-        placeholders = summary.return_placeholder_text(self.placeholder_text.toPlainText())
+        placeholders = self.summary.return_placeholder_text(self.placeholder_text.toPlainText())
+        placeholder_pairs = self.summary.return_placeholder_pair(self.placeholder_text.toPlainText())
         template_file = self.template_file
         subject = self.subject_text.text()
         attachment_file = self.attachment_file
@@ -254,7 +282,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
                         total_recipient=total_recipient,\
                         subject=subject,\
                         attachment_file=attachment_file,\
-                        recipient_file=recipient_file)
+                        recipient_file=recipient_file,\
+                        placeholder_pairs=placeholder_pairs)
         self.summary_window.show()
         
             
@@ -294,7 +323,10 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         else:
             show_messagebox(9)                
 
-
+    def reset_attachment_file(self):
+        self.attachment_label.setText('')
+        self.attachment_file = ''
+        
     def extract_recipients(self):
     
         options = QtWidgets.QFileDialog.Options()
@@ -314,21 +346,23 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         else:
             show_messagebox(5)
     
-    def send_test_mail(self):
-        
+    def send_test_mail(self):             
+                        
         if self.template_file:
             if self.test_email_label.text():
-                to_mail = self.test_email_label.text() 
-                message = open(self.template_file).read()
-                placeholder_text = json.loads(self.placeholder_text.toPlainText())
                 try:
-                    res = test_send.send_test_mail(to_mail,os.getenv('FROM_MAIL'),self.subject_text.text(),\
-                            message)        
-                    if (res.status_code == 200):
-                        show_messagebox(12)
-                    else:
-                        show_messagebox(17)
-                        self.test_email_label.clear()
+                    summary = viewSummary.GenerateSummary()
+                    data = {'recipient_file' : self.test_email_label.text(),\
+                            'template_file' : self.template_file,\
+                            'subject' : self.subject_text.text(),\
+                            'placeholder_values' : summary.return_placeholder_pair(self.placeholder_text.toPlainText()),\
+                            'attach_file' : self.attachment_file}
+                    data = json.dumps(data)
+                    print('starting')
+                    self.progWindow = ProgressWindow()
+                    self.progWindow.setLabelText('Sending Mails....')
+                    self.progWindow.show()
+                    self.progWindow.callProgram('python',["Screens\Send_test.py", data])
                 except:
                     show_messagebox(17)
                     self.test_email_label.clear()
@@ -336,8 +370,6 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
                 show_messagebox(16)
         else:
            show_messagebox(13) 
-        
-        
 
 class RecipientWindow(recipientScreen.Ui_Dialog,QtWidgets.QDialog):
     """ This class is for showing all the details of the recipients """
@@ -373,7 +405,7 @@ class SummaryScreen(QtWidgets.QDialog,summaryScreen.Ui_Dialog):
         self.attachment_file = self.items['attachment_file']
         self.subject = self.items['subject']
         self.template_file = self.items ['template_file']
-        self.placeholder = self.items['placeholder']
+        self.placeholder = self.items['placeholder_pairs']
         self.total_recipient = self.items['total_recipient']
         self.recipient_file = self.items['recipient_file']
         item = QtWidgets.QTableWidgetItem(str(os.path.basename(self.template_file))) 
@@ -505,6 +537,7 @@ class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
     def onFinished(self):
         self.progressBar.setRange(0,1)
         self.progressBar.setValue(1)
+        self.setLabelText('Process Completed!!')
 
     def callProgram(self, ver, processList):
        self.onStart(ver,processList)

@@ -5,7 +5,7 @@ class GenerateSummary(object):
     def __init__(self):
         pass
     
-    def return_total_recipients(self,df):
+    def return_total_recipients(self, df):
         
         if isinstance(df, pd.DataFrame):
             dataframe = df.copy()
@@ -13,13 +13,16 @@ class GenerateSummary(object):
         else:
             return ''
     
-    def return_placeholder_text(self,placeholder):
+    def return_placeholder_text(self, placeholder):
         json_content = json.loads(placeholder)
         placeholders = []
         for i in list(json_content.keys()):
             placeholders.append(i)
         return str(",".join(placeholders))
-    
+
+    def return_placeholder_pair(self, placeholder):
+        json_content = json.loads(placeholder)
+        return json_content
     
         
         
