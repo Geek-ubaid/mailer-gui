@@ -75,7 +75,6 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
         
     def check_for_env(self):
         if os.getenv('LOGIN_NAME') and os.getenv('PASSKEY'):
-            print('present')
             return True
         else:
             return False

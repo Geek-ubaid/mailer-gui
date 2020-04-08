@@ -237,7 +237,7 @@ class Ui_MainWindow(object):
         self.actionReset_Attachment.setText(_translate("MainWindow", "Reset Attachment"))
         self.actionReset_Attachment.setShortcut(_translate("MainWindow", "Ctrl+A"))
         self.actionReset_All.setText(_translate("MainWindow", "Reset All"))
-        self.actionReset_All.setShortcut(_translate("MainWindow", "Ctrl+S"))
+        self.actionReset_All.setShortcut(_translate("MainWindow", "Ctrl+R"))
 
 
 if __name__ == "__main__":
