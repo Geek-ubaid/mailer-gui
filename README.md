@@ -17,7 +17,7 @@
 - [X]  Recipients extraction from .csv file with view support
 - [X]  Send mail with/without attachments
 - [X]  Send plainText/HTML mails
-- [ ]  View and Download Logs of the bulk mail tasks
+- [X]  View and Download Logs of the bulk mail tasks
 
 <br>
 
