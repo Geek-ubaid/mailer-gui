@@ -2,7 +2,7 @@ __pycache__
 env/
 MailerGui/.env
 MailerGui/wordprocessor.py
-MailerGui/Data/images/
+MailerGui/Assets/images/
 venv
 test.py
 test_stream.py
