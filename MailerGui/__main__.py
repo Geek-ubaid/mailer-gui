@@ -6,6 +6,7 @@ import sys
 import csv
 import json
 import logging
+import datetime
 
 import qdarkstyle
 import pandas as pd
@@ -179,6 +180,10 @@ def show_messagebox(x):
         message.setText('Test Message Not sent!!')
         message.setIcon(QtWidgets.QMessageBox.Warning)
         message.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    elif x == 18:
+        message.setText('Do you want to save the logs?')
+        message.setIcon(QtWidgets.QMessageBox.Question)
+        message.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No) 
     return message.exec_()
     
 class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
@@ -266,9 +271,12 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             pass       
          
     def show_summary(self):
+        
         self.summary = viewSummary.GenerateSummary()
+        
         if self.recipient_file:
             total_recipient = self.summary.return_total_recipients(self.recipients_df)
+        
         recipient_file = self.recipient_file
         placeholders = self.summary.return_placeholder_text(self.placeholder_text.toPlainText())
         placeholder_pairs = self.summary.return_placeholder_pair(self.placeholder_text.toPlainText())
@@ -492,6 +500,7 @@ class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
     
     def __init__(self):
         super(ProgressWindow, self).__init__()
+        self.logs = []
         self.setupUi(self)
         self.setWindowIcon(
             QtGui.QIcon(r'Data/googledev.png'))
@@ -509,6 +518,23 @@ class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
         self.stop_button.clicked.connect(self.stop_function)
         
     def continue_function(self):
+        response = show_messagebox(18)
+        if response == YES:
+            now = datetime.datetime.now()
+            date_time = now.strftime("logs-%m-%d-%Y") + '.txt'
+            options = QtWidgets.QFileDialog.Options()
+            options |= QtWidgets.QFileDialog.DontUseNativeDialog
+            name = QtWidgets.QFileDialog.getSaveFileName(None, 'Save File',
+                                                        date_time,
+                                                        'Text (*.txt)', options=options)[0]
+            if name:
+                with open(name,'w') as log_file:
+                    for i in self.logs:
+                        log_file.write(i)
+                        log_file.write('\n')    
+            else:
+                pass 
+            
         self.close()
   
     def stop_function(self):
@@ -527,6 +553,7 @@ class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
         cursor = self.logs_view.textCursor()
         cursor.movePosition(cursor.End)
         cursor.insertText(str_data)
+        self.logs.append(str_data)
         # self.logs_view.ensureCursorVisible()
         
     def onStart(self,ver,processList):

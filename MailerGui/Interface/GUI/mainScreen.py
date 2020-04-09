@@ -79,7 +79,7 @@ class Ui_MainWindow(object):
         self.send_bulk_button.setFocusPolicy(QtCore.Qt.NoFocus)
         self.send_bulk_button.setAutoFillBackground(False)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("Assets/logos/logo-mailer.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("../../Data/logo-mailer.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.send_bulk_button.setIcon(icon)
         self.send_bulk_button.setObjectName("send_bulk_button")
         self.gridLayout_7.addWidget(self.send_bulk_button, 0, 0, 1, 1, QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)

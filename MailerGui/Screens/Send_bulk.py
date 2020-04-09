@@ -322,6 +322,10 @@ def main(data):
     recipient_file = data['recipient_file']
     template_file = data['template_file']
     subject = data['subject']
+    
+    if subject == '':
+        subject = 'Undefined Subject'
+    
     placeholder_values = data['placeholder_values']
     attach = data['attach_file']
     

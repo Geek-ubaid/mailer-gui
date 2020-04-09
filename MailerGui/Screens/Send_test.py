@@ -3,7 +3,6 @@ import os
 import sys
 import json
 import argparse
-import datetime
 
 import requests
 import pandas as pd
@@ -16,6 +15,7 @@ load_dotenv()
 
 EXTENSION_TO_TYPE = {'pdf':'document/pdf', 'jpg':'image/jpg', 'png':'image/png', \
     'jpeg':'image/jpeg', 'docx':'document/docx'}
+
 
 def send_mailgun_bulk_mail(to_mail,from_mail,subject,message,attach=False):
     
@@ -35,14 +35,8 @@ def send_mailgun_bulk_mail(to_mail,from_mail,subject,message,attach=False):
                 "subject": subject,
                 "html": message},
             )
-        current_timestamp = datetime.datetime.now()
-        date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
-        print_format(f"{} - Sent : Success - Recipient : {} - Status Code : {} - Attachment : Yes".format(
-                            date_time,\
-                            to,\
-                            str(response.status_code)
-        ))
-            
+        print_format(response)
+        
     else:
         
         response = requests.post(
@@ -53,13 +47,7 @@ def send_mailgun_bulk_mail(to_mail,from_mail,subject,message,attach=False):
                 "subject": subject,
                 "html": message},
             )
-        current_timestamp = datetime.datetime.now()
-        date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
-        print_format(f"{} - Sent : Success - Recipient : {} - Status Code : {} - Attachment : No".format(
-                            date_time,\
-                            to_mail,\
-                            str(response.status_code)  
-        ))      
+        print_format(response)
         
 def send_sendgrid_bulk_mail(to,sender,subject,message,attach=False):
     
@@ -86,21 +74,12 @@ def send_sendgrid_bulk_mail(to,sender,subject,message,attach=False):
         mail = Mail(from_email, subject, to_email, content)
         mail.add_attachment(attachment)
         response = sg.client.mail.send.post(request_body=mail.get())
-        current_timestamp = datetime.datetime.now()
-        date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
-        print_format(f"{} - Sent : Success - Recipient : {} - Status Code : {} - Attachment : Yes".format(
-                            date_time,\
-                            to,\
-                            str(response.status_code)
-        ) )
+        print_format("mail sent to" + to)
+        print_format(attach_file_name)
+        print_format(response.status_code)
         # except:
-        #     current_timestamp = datetime.datetime.now()
-            # date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
-            # print_format(f"{} - Sent : Failure - Recipient : {} - Status Code : {} - Attachment : Yes".format(
-        #                     date_time,\
-        #                     to,\
-        #                     str(response.status_code)
-        # #     pass
+        #     print_format("mail not sent to " + to)
+        #     pass
 
     else:
         # try:
@@ -109,13 +88,8 @@ def send_sendgrid_bulk_mail(to,sender,subject,message,attach=False):
         content = Content("text/html", message)
         mail = Mail(from_email, subject, to_email, content)
         response = sg.client.mail.send.post(request_body=mail.get())
-        current_timestamp = datetime.datetime.now()
-        date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
-        print_format(f"{} - Sent : Success - Recipient : {} - Status Code : {} - Attachment : No".format(
-                            date_time,\
-                            to,\
-                            str(response.status_code)
-        ))
+        print_format("mail sent to" + to)
+        print_format(response.status_code)
         # except:
         #     print_format("mail not sent to " + to)
         # pass
