@@ -3,6 +3,7 @@ env/
 MailerGui/.env
 MailerGui/wordprocessor.py
 MailerGui/Assets/images/
+MailerGui/Screens/Test_send_bulk.py
 venv
 test.py
 test_stream.py

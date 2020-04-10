@@ -36,7 +36,40 @@ load_dotenv()
 
 YES = QtWidgets.QMessageBox.Yes
 OK = QtWidgets.QMessageBox.Ok
-CLOSE = QtWidgets.QMessageBox.Close
+NO = QtWidgets.QMessageBox.No
+
+def show_warning_message(message_text):
+    
+    """ This function to show warning message dialog box"""
+    
+    message = QtWidgets.QMessageBox()
+    message.setWindowTitle("Status Window")
+    message.setText(str(message_text))
+    message.setIcon(QtWidgets.QMessageBox.Warning)
+    message.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    return message.exec_()
+
+def show_information_message(message_text):
+    
+    """ This function to show information message dialog box"""
+
+    message = QtWidgets.QMessageBox()
+    message.setWindowTitle("Status Window")
+    message.setIcon(QtWidgets.QMessageBox.Information)
+    message.setText(str(message_text))
+    message.setStandardButtons(QtWidgets.QMessageBox.Ok)
+    return message.exec_()
+
+def show_question_message(message_text):
+    
+    """ This function to show question message dialog box"""
+
+    message = QtWidgets.QMessageBox()
+    message.setWindowTitle("Status Window")
+    message.setText(str(message_text))
+    message.setIcon(QtWidgets.QMessageBox.Question)
+    message.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+    return message.exec_()
 
 class SetupWindow(QtWidgets.QDialog,beginScreen.Ui_Dialog):
     
@@ -93,12 +126,12 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
                 self.close()
                 self.window.show()
             except:
-                show_messagebox(2)
+                show_warning_message('Erorr in login!!')
                 self.reset_check()
                 pass
         else:
-            if(show_messagebox(1) == CLOSE):
-                if(show_messagebox(4) == YES):
+            if(show_question_message('Invalid Credentials! Do you want to enter again?') == NO):
+                if(show_question_message('Do you want to quit?') == YES):
                     app.quit()
                 else:
                     pass
@@ -110,82 +143,7 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
     def close_window(self):
         global app
         sys.exit()
-
-
-def show_messagebox(x):
-    
-    """ This function is used to show the staus messages in the application"""
-    message = QtWidgets.QMessageBox()
-    message.setWindowTitle("Status Window")
-    message.setIcon(QtWidgets.QMessageBox.Information)
-
-    if x == 1:
-        message.setText('Invalid Credentials')
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok | QtWidgets.QMessageBox.Close)
-    elif x == 2:
-        message.setText('Erorr in login!!')
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 3:
-        message.setText('Recipients added succesfully!')
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 4:
-        message.setText('Are you sure you wanna exit?')
-        message.setIcon(QtWidgets.QMessageBox.Question)
-        message.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
-    elif x == 5:
-        message.setText('No File is selected!')
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 6:
-        message.setText('Size of file exceeded! Select another file')
-        message.setIcon(QtWidgets.QMessageBox.Warning)
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 7:
-        message.setText('All Mail sent successfully')
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 8:
-        message.setText('Error reading recipients file!')
-        message.setIcon(QtWidgets.QMessageBox.Warning)
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 9:
-        message.setText('No attachment is selected!')
-        message.setIcon(QtWidgets.QMessageBox.Warning)
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 10:
-        message.setText('Template added succesfully!')
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 11:
-        message.setText('Tick the verify box before sending!!')
-        message.setIcon(QtWidgets.QMessageBox.Warning)
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 12:
-        message.setText('Test mail sent succesfully!')
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 13:
-        message.setText('Please enter complete details before proceeding!!')
-        message.setIcon(QtWidgets.QMessageBox.Warning)
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 14:
-        message.setText('Set all the config before proceeding')
-        message.setIcon(QtWidgets.QMessageBox.Warning)
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok) 
-    elif x == 15:
-        message.setText('Are you sure you wan to cancel the operation?')
-        message.setIcon(QtWidgets.QMessageBox.Question)
-        message.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No) 
-    elif x == 16:
-        message.setText('Please enter test mail!!')
-        message.setIcon(QtWidgets.QMessageBox.Warning)
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 17:
-        message.setText('Test Message Not sent!!')
-        message.setIcon(QtWidgets.QMessageBox.Warning)
-        message.setStandardButtons(QtWidgets.QMessageBox.Ok)
-    elif x == 18:
-        message.setText('Do you want to save the logs?')
-        message.setIcon(QtWidgets.QMessageBox.Question)
-        message.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No) 
-    return message.exec_()
-    
+   
 class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
     """ This is the main interface for the sending bulk mail """ 
 
@@ -222,7 +180,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         finish.triggered.connect(self.close_window)
 
     def close_window(self, event):
-        if show_messagebox(4) == YES :
+        if show_question_message('Are you sure you wanna exit?') == YES :
             sys.exit()         
         else:
             pass
@@ -275,23 +233,25 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.summary = viewSummary.GenerateSummary()
         
         if self.recipient_file:
+            
             total_recipient = self.summary.return_total_recipients(self.recipients_df)
-        
-        recipient_file = self.recipient_file
-        placeholders = self.summary.return_placeholder_text(self.placeholder_text.toPlainText())
-        placeholder_pairs = self.summary.return_placeholder_pair(self.placeholder_text.toPlainText())
-        template_file = self.template_file
-        subject = self.subject_text.text()
-        attachment_file = self.attachment_file
-        
-        self.summary_window = SummaryScreen(template_file=template_file, \
-                        placeholder=placeholders,\
-                        total_recipient=total_recipient,\
-                        subject=subject,\
-                        attachment_file=attachment_file,\
-                        recipient_file=recipient_file,\
-                        placeholder_pairs=placeholder_pairs)
-        self.summary_window.show()
+            recipient_file = self.recipient_file
+            placeholders = self.summary.return_placeholder_text(self.placeholder_text.toPlainText())
+            placeholder_pairs = self.summary.return_placeholder_pair(self.placeholder_text.toPlainText())
+            template_file = self.template_file
+            subject = self.subject_text.text()
+            attachment_file = self.attachment_file
+            
+            self.summary_window = SummaryScreen(template_file=template_file, \
+                            placeholder=placeholders,\
+                            total_recipient=total_recipient,\
+                            subject=subject,\
+                            attachment_file=attachment_file,\
+                            recipient_file=recipient_file,\
+                            placeholder_pairs=placeholder_pairs)
+            self.summary_window.show()
+        else:
+            show_warning_message("Select Recipients/Template before proceeding!")
         
             
     def show_recipients(self):
@@ -306,10 +266,10 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             "Select File to upload", "","HTML Files (*.html)", options=options)
         if (self.template_file.endswith('.html')):      
             file_name = os.path.basename(self.template_file)        
-            show_messagebox(10)
+            show_information_message('Template added succesfully!')
             self.lineEdit.setText(file_name)
         else:
-            show_messagebox(5)
+            show_information_message('No File is selected!')
         
 
     def get_attachment_file(self):
@@ -322,13 +282,14 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
                 file_name = os.path.basename(self.attachment_file)
                 file_size=os.path.getsize(self.attachment_file)
                 if (file_size> 26214400):
-                    show_messagebox(6)
+                    show_warning_message('Size of file exceeded! Select another file')
                 else:
                     self.attachment_label.setText(file_name)
             except:
-                show_messagebox(9)
+                show_information_message('No attachment is selected!')
         else:
-            show_messagebox(9)                
+            show_information_message('No attachment is selected!')
+                
 
     def reset_attachment_file(self):
         self.attachment_label.setText('')
@@ -346,12 +307,12 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             try:
                 self.recipients_df = pd.read_csv(self.recipient_file)            
             except:
-                show_messagebox(8)
+                show_warning_message('Error reading recipients file!')
             
-            show_messagebox(3)
+            show_information_message("Recipients added succesfully!")
             self.recipients_label.setText(file_name)
         else:
-            show_messagebox(5)
+            show_information_message('No File is selected!')
     
     def send_test_mail(self):             
                         
@@ -366,17 +327,17 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
                             'attach_file' : self.attachment_file}
                     data = json.dumps(data)
                     print('starting')
-                    self.progWindow = ProgressWindow()
-                    self.progWindow.setLabelText('Sending Mails....')
-                    self.progWindow.show()
-                    self.progWindow.callProgram('python',["Screens\Send_test.py", data])
+                    progWindow = ProgressWindow()
+                    progWindow.setLabelText('Sending Mails....')
+                    progWindow.show()
+                    progWindow.callProgram('python',["Screens\Send_test.py", data])
                 except:
-                    show_messagebox(17)
+                    show_information_message('Test Message Not sent!!')
                     self.test_email_label.clear()
             else:
-                show_messagebox(16)
+                show_warning_message('Please enter test mail!!')
         else:
-           show_messagebox(13) 
+           show_warning_message('Please enter complete details before proceeding!!') 
 
 class RecipientWindow(recipientScreen.Ui_Dialog,QtWidgets.QDialog):
     """ This class is for showing all the details of the recipients """
@@ -439,17 +400,17 @@ class SummaryScreen(QtWidgets.QDialog,summaryScreen.Ui_Dialog):
                         'recipients_count' : self.total_recipient}
                 data = json.dumps(data)
                 print('starting')
-                self.progWindow = ProgressWindow()
-                self.progWindow.setLabelText('Sending Mails....')
+                progWindow = ProgressWindow()
+                progWindow.setLabelText('Sending Mails....')
                 self.close()
-                self.progWindow.show()
-                self.progWindow.callProgram('python',['Screens\Send_bulk.py', data])
+                progWindow.show()
+                progWindow.callProgram('python',['Screens\Send_bulk.py', data])
                 
             else:
-                show_messagebox(13)
+                show_warning_message('Please enter complete details before proceeding!!')
                 self.verify_box.setChecked(False) 
         else:
-            show_messagebox(11)
+            show_warning_message('Tick the verify box before sending!!')
             
 class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
     
@@ -493,7 +454,6 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
         os.environ['PASSKEY'] = password_response
         
             
-        
 class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
     
     """This class is for showing the progress of all the events happening in the interface"""
@@ -502,6 +462,7 @@ class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
         super(ProgressWindow, self).__init__()
         self.logs = []
         self.setupUi(self)
+        # aboutToQuit.connect(self.stop_function)
         self.setWindowIcon(
             QtGui.QIcon(r'Data/googledev.png'))
         self.process = QtCore.QProcess(self)
@@ -516,9 +477,10 @@ class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
         self.process.finished.connect(self.onFinished)
         self.continue_button.clicked.connect(self.continue_function)
         self.stop_button.clicked.connect(self.stop_function)
+    
         
     def continue_function(self):
-        response = show_messagebox(18)
+        response = show_question_message('Do you want to save the logs?')
         if response == YES:
             now = datetime.datetime.now()
             date_time = now.strftime("logs-%m-%d-%Y") + '.txt'
@@ -538,10 +500,10 @@ class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
         self.close()
   
     def stop_function(self):
-        response = show_messagebox(15)
+        response = show_question_message('Are you sure you wan to cancel the operation?')
         if response == YES:
             self.process.kill
-            self.close()
+            self.continue_function()
         else:
             pass
             
@@ -568,8 +530,6 @@ class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
     def callProgram(self, ver, processList):
        self.onStart(ver,processList)
 
-
-        
 
 if __name__ == '__main__':
     
