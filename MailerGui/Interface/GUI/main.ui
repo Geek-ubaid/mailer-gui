@@ -7,249 +7,37 @@
     <x>0</x>
     <y>0</y>
     <width>916</width>
-    <height>651</height>
+    <height>688</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MailerGui</string>
   </property>
+  <property name="tabShape">
+   <enum>QTabWidget::Rounded</enum>
+  </property>
+  <property name="unifiedTitleAndToolBarOnMac">
+   <bool>false</bool>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_8">
-    <item row="9" column="0">
-     <widget class="QGroupBox" name="groupBox">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>10</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="title">
-       <string>Template</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_4">
-       <item row="3" column="1">
-        <widget class="QPushButton" name="test_send_button">
-         <property name="text">
-          <string>Send Test</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QLineEdit" name="test_email_label">
-         <property name="echoMode">
-          <enum>QLineEdit::Normal</enum>
-         </property>
-         <property name="placeholderText">
-          <string>Add test email</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QPushButton" name="add_template_button">
-         <property name="text">
-          <string>Add</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QLineEdit" name="lineEdit">
-         <property name="readOnly">
-          <bool>true</bool>
-         </property>
-         <property name="placeholderText">
-          <string>Template file name will be displayed here</string>
-         </property>
-        </widget>
-       </item>
-       <item row="4" column="0">
-        <spacer name="verticalSpacer_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="2" column="0">
-        <spacer name="verticalSpacer_7">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="1" column="2">
-        <widget class="QPushButton" name="edit_button">
-         <property name="text">
-          <string>View</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="7" column="0">
-     <widget class="QGroupBox" name="groupBox_2">
-      <property name="font">
-       <font>
-        <family>Arial</family>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="title">
-       <string>Placeholder</string>
-      </property>
-      <layout class="QGridLayout" name="gridLayout_5">
-       <item row="1" column="0">
-        <widget class="QTextEdit" name="placeholder_text">
-         <property name="html">
-          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial'; font-size:10pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;{&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;	&amp;quot;key1&amp;quot; : &amp;quot;value1&amp;quot;,&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;	&amp;quot;key2&amp;quot; : &amp;quot;value2&amp;quot;&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;	&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;}&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt;&quot;&gt;	&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="placeholderText">
-          <string/>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="12" column="0">
-     <spacer name="verticalSpacer_8">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="11" column="0">
-     <layout class="QGridLayout" name="gridLayout_7">
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="horizontalSpacing">
-       <number>62</number>
-      </property>
-      <property name="verticalSpacing">
-       <number>13</number>
-      </property>
-      <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-       <widget class="QCommandLinkButton" name="send_bulk_button">
-        <property name="font">
-         <font>
-          <family>Times New Roman</family>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="cursor">
-         <cursorShape>PointingHandCursor</cursorShape>
-        </property>
-        <property name="focusPolicy">
-         <enum>Qt::NoFocus</enum>
-        </property>
-        <property name="autoFillBackground">
-         <bool>false</bool>
-        </property>
-        <property name="text">
-         <string>Start Mailer</string>
-        </property>
-        <property name="icon">
-         <iconset>
-          <normaloff>../../Data/logo-mailer.png</normaloff>../../Data/logo-mailer.png</iconset>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="4" column="0">
-     <spacer name="verticalSpacer_4">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="0" column="0">
-     <spacer name="verticalSpacer_3">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="8" column="0">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="2" column="0">
-     <spacer name="verticalSpacer_5">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="3" column="0">
+    <item row="1" column="0">
      <layout class="QGridLayout" name="gridLayout">
+      <property name="leftMargin">
+       <number>100</number>
+      </property>
+      <property name="topMargin">
+       <number>10</number>
+      </property>
+      <property name="rightMargin">
+       <number>100</number>
+      </property>
+      <property name="bottomMargin">
+       <number>10</number>
+      </property>
       <property name="horizontalSpacing">
        <number>23</number>
       </property>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="extract_button">
-        <property name="text">
-         <string>Import</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QLineEdit" name="recipients_label">
         <property name="mouseTracking">
@@ -263,7 +51,14 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
+      <item row="0" column="5">
+       <widget class="QPushButton" name="view_button">
+        <property name="text">
+         <string>View </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" alignment="Qt::AlignHCenter">
        <widget class="QLabel" name="label_6">
         <property name="font">
          <font>
@@ -278,17 +73,17 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
-      <item row="0" column="5">
-       <widget class="QPushButton" name="view_button">
+      <item row="0" column="2">
+       <widget class="QPushButton" name="extract_button">
         <property name="text">
-         <string>View </string>
+         <string>Import</string>
         </property>
        </widget>
       </item>
      </layout>
     </item>
-    <item row="6" column="0">
-     <spacer name="verticalSpacer_6">
+    <item row="18" column="0">
+     <spacer name="verticalSpacer_9">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -300,8 +95,20 @@ p, li { white-space: pre-wrap; }
       </property>
      </spacer>
     </item>
-    <item row="5" column="0">
+    <item row="2" column="0">
      <layout class="QGridLayout" name="gridLayout_3">
+      <property name="leftMargin">
+       <number>100</number>
+      </property>
+      <property name="topMargin">
+       <number>10</number>
+      </property>
+      <property name="rightMargin">
+       <number>100</number>
+      </property>
+      <property name="bottomMargin">
+       <number>10</number>
+      </property>
       <property name="horizontalSpacing">
        <number>23</number>
       </property>
@@ -320,6 +127,13 @@ p, li { white-space: pre-wrap; }
         </property>
        </widget>
       </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="reset_attachment_button">
+        <property name="text">
+         <string>Reset</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QLineEdit" name="attachment_label">
         <property name="readOnly">
@@ -327,13 +141,6 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="placeholderText">
          <string>File name will be displayed here</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="reset_attachment_button">
-        <property name="text">
-         <string>Reset</string>
         </property>
        </widget>
       </item>
@@ -346,10 +153,22 @@ p, li { white-space: pre-wrap; }
       </item>
      </layout>
     </item>
-    <item row="1" column="0">
+    <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout_2">
+      <property name="leftMargin">
+       <number>100</number>
+      </property>
+      <property name="topMargin">
+       <number>10</number>
+      </property>
+      <property name="rightMargin">
+       <number>100</number>
+      </property>
+      <property name="bottomMargin">
+       <number>10</number>
+      </property>
       <property name="horizontalSpacing">
-       <number>39</number>
+       <number>40</number>
       </property>
       <item row="0" column="1">
        <widget class="QLineEdit" name="subject_text">
@@ -378,8 +197,8 @@ p, li { white-space: pre-wrap; }
       </item>
      </layout>
     </item>
-    <item row="10" column="0">
-     <spacer name="verticalSpacer_9">
+    <item row="4" column="0">
+     <spacer name="verticalSpacer_11">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -390,6 +209,355 @@ p, li { white-space: pre-wrap; }
        </size>
       </property>
      </spacer>
+    </item>
+    <item row="8" column="0">
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="14" column="0">
+     <spacer name="verticalSpacer_10">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="19" column="0">
+     <layout class="QGridLayout" name="gridLayout_7">
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="horizontalSpacing">
+       <number>62</number>
+      </property>
+      <property name="verticalSpacing">
+       <number>13</number>
+      </property>
+      <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
+       <widget class="QCommandLinkButton" name="send_bulk_button">
+        <property name="font">
+         <font>
+          <family>Segoe UI</family>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="focusPolicy">
+         <enum>Qt::NoFocus</enum>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="text">
+         <string>Start Mailer</string>
+        </property>
+        <property name="icon">
+         <iconset>
+          <normaloff>../../Assets/logos/logo-mailer.png</normaloff>../../Assets/logos/logo-mailer.png</iconset>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="20" column="0">
+     <spacer name="verticalSpacer_8">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="15" column="0">
+     <spacer name="verticalSpacer_20">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="17" column="0">
+     <widget class="QGroupBox" name="groupBox">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>10</pointsize>
+        <weight>50</weight>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox:title {
+                 subcontrol-origin: margin;
+                 subcontrol-position: top center;
+                 padding-left: 10px;
+                 padding-right: 10px; }</string>
+      </property>
+      <property name="title">
+       <string>Template</string>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <property name="leftMargin">
+        <number>100</number>
+       </property>
+       <property name="topMargin">
+        <number>23</number>
+       </property>
+       <property name="rightMargin">
+        <number>100</number>
+       </property>
+       <property name="bottomMargin">
+        <number>28</number>
+       </property>
+       <property name="horizontalSpacing">
+        <number>23</number>
+       </property>
+       <property name="verticalSpacing">
+        <number>42</number>
+       </property>
+       <item row="2" column="0">
+        <widget class="QLineEdit" name="test_email_label">
+         <property name="echoMode">
+          <enum>QLineEdit::Normal</enum>
+         </property>
+         <property name="placeholderText">
+          <string>Add test email</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="test_send_button">
+         <property name="text">
+          <string>Send Test</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="add_template_button">
+         <property name="text">
+          <string>Add</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLineEdit" name="lineEdit">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="placeholderText">
+          <string>Template file name will be displayed here</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="2">
+        <widget class="QPushButton" name="edit_button">
+         <property name="text">
+          <string>View</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="font">
+       <font>
+        <family>Arial</family>
+        <pointsize>10</pointsize>
+       </font>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QGroupBox:title {
+                 subcontrol-origin: margin;
+                 subcontrol-position: top center;
+                 padding-left: 10px;
+                 padding-right: 10px; }</string>
+      </property>
+      <property name="title">
+       <string>Placeholder</string>
+      </property>
+      <property name="flat">
+       <bool>true</bool>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <property name="leftMargin">
+        <number>100</number>
+       </property>
+       <property name="topMargin">
+        <number>22</number>
+       </property>
+       <property name="rightMargin">
+        <number>100</number>
+       </property>
+       <property name="bottomMargin">
+        <number>22</number>
+       </property>
+       <property name="horizontalSpacing">
+        <number>163</number>
+       </property>
+       <property name="verticalSpacing">
+        <number>22</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QSplitter" name="splitter_4">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="handleWidth">
+          <number>11</number>
+         </property>
+         <widget class="QLabel" name="label">
+          <property name="text">
+           <string>Placeholder key</string>
+          </property>
+         </widget>
+         <widget class="QComboBox" name="placeholder_key">
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <item>
+           <property name="text">
+            <string>Select Key</string>
+           </property>
+          </item>
+         </widget>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QSplitter" name="splitter_2">
+         <property name="orientation">
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="handleWidth">
+          <number>11</number>
+         </property>
+         <widget class="QLabel" name="label_2">
+          <property name="text">
+           <string>Placeholder value   </string>
+          </property>
+         </widget>
+         <widget class="QSplitter" name="splitter">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="handleWidth">
+           <number>14</number>
+          </property>
+          <widget class="QComboBox" name="placeholder_value">
+           <item>
+            <property name="text">
+             <string>Select Value</string>
+            </property>
+           </item>
+          </widget>
+          <widget class="QLabel" name="label_8">
+           <property name="text">
+            <string>OR</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="custom_value">
+           <property name="styleSheet">
+            <string notr="true"/>
+           </property>
+           <property name="placeholderText">
+            <string>Enter Custom Value</string>
+           </property>
+          </widget>
+         </widget>
+        </widget>
+       </item>
+       <item row="2" column="0" alignment="Qt::AlignRight">
+        <widget class="QSplitter" name="splitter_3">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="handleWidth">
+          <number>20</number>
+         </property>
+         <widget class="QPushButton" name="add_placeholder_button">
+          <property name="text">
+           <string>Add</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="reset_placeholder_button">
+          <property name="text">
+           <string>Reset</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+       <item row="0" column="1" rowspan="3">
+        <widget class="QListWidget" name="placeholder_view">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
+         </property>
+         <property name="alternatingRowColors">
+          <bool>true</bool>
+         </property>
+         <item>
+          <property name="text">
+           <string>Placeholder Values</string>
+          </property>
+          <property name="font">
+           <font>
+            <family>Arial</family>
+            <pointsize>10</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
+          </property>
+         </item>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </item>
    </layout>
   </widget>

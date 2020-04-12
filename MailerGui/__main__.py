@@ -15,6 +15,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWebKit import *
 from PyQt5.QtWidgets import *
 from dotenv import load_dotenv
+from jinja2 import Environment, BaseLoader 
 from PyQt5.QtWebKitWidgets import *
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QApplication, QWidget, QMainWindow
@@ -78,7 +79,7 @@ class SetupWindow(QtWidgets.QDialog,beginScreen.Ui_Dialog):
     def __init__(self):
         super(SetupWindow,self).__init__(parent=None)
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon(r'Data\logo-mailer.png'))
+        self.setWindowIcon(QtGui.QIcon(r'Assets\logos\logo-mailer.png'))
         self.setWindowTitle("Welcome to MailerGUI")
         self.start_button.clicked.connect(self.show_settings)
         finish = QtWidgets.QAction("Quit",self)
@@ -100,7 +101,7 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
     def __init__(self,parent=None):
         super(Loginwindow, self).__init__(parent)
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon(r'Data\logo-mailer.png'))
+        self.setWindowIcon(QtGui.QIcon(r'Assets\logos\logo-mailer.png'))
         self.setWindowTitle("MailerGUI")
         self.login.clicked.connect(self.login_check)
         self.reset.clicked.connect(self.reset_check)
@@ -157,7 +158,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.recipients_df = ''
         
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon(r'Data\logo-mailer.png'))
+        self.setWindowIcon(QtGui.QIcon(r'Assets\logos\logo-mailer.png'))
         self.setWindowTitle("MailerGUI")
         self.recipients_label.setText(self.recipient_file)
         self.attachment_label.setText(self.attachment_file)
@@ -192,13 +193,12 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.lineEdit.setText('')
         self.test_email_label.setText('')
         self.recipients_label.setText('')
-        self.placeholder_text.setText('''
-                                      {
-                                        "key1" : "value1",
-                                        "key2" : "value2"
-                                      }
-                                      ''')
-    
+        self.placeholder_view.clear()
+        self.placeholder_view.addItem('None') 
+        self.placeholder_value.clear()
+        self.placeholder_value.addItem('Select Value')
+        self.placeholder_key.clear()
+        self.placeholder_key.addItem('Select Key')
         self.recipient_file = ''
         self.attachment_file = ''
         self.template_file = ''
@@ -255,9 +255,20 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         
             
     def show_recipients(self):
-        self.recipient_window = RecipientWindow(self.recipients_df)
-        self.recipient_window.exec_()
+        if self.recipients_df == '':
+            show_warning_message("No file is selected!")
+        else:
+            print(self.recipient_file, self.recipients_df)
+            self.recipient_window = RecipientWindow(self.recipients_df)
+            self.recipient_window.exec_()
           
+    def get_placeholder_values(self, template_file):
+        with open(template_file) as file_:
+            content = file_.readlines()
+            for i in content:
+                if "{{" in content:
+                    print(i)
+        
         
     def get_template_file(self):
         options = QtWidgets.QFileDialog.Options()
@@ -265,7 +276,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.template_file, _ = QtWidgets.QFileDialog.getOpenFileName(self, \
             "Select File to upload", "","HTML Files (*.html)", options=options)
         if (self.template_file.endswith('.html')):      
-            file_name = os.path.basename(self.template_file)        
+            file_name = os.path.basename(self.template_file)  
+            self.get_placeholder_values(self.template_file)      
             show_information_message('Template added succesfully!')
             self.lineEdit.setText(file_name)
         else:
@@ -536,7 +548,7 @@ if __name__ == '__main__':
     global app
     app = QtWidgets.QApplication(sys.argv)
     app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
-    app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt5'))
+    # app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt5'))
     window = Loginwindow()
     if not(window.check_for_env()):
         begin_window = SetupWindow()

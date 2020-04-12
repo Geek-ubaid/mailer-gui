@@ -8,6 +8,7 @@ import requests
 import pandas as pd
 import base64
 import sendgrid
+from jinja2 import Environment, BaseLoader 
 from sendgrid.helpers.mail import *
 from dotenv import load_dotenv
 
@@ -94,9 +95,19 @@ def send_sendgrid_bulk_mail(to,sender,subject,message,attach=False):
         #     print_format("mail not sent to " + to)
         # pass
         
-def set_placeholder_values(message, actual_value, replace_value):
+def set_placeholder_values(message, data):
+    """ For setting placeholder values in the message content """
     
-    return message.replace(actual_value,replace_value)
+    return message.render(data)
+         
+
+def get_format_template(template_dir):
+    
+    with open(template_dir) as file_:
+        content = file_.read()
+        template = Environment(loader = BaseLoader).from_string(content)
+        print(type(template))
+    return template
 
 def main(data):
     
@@ -112,16 +123,19 @@ def main(data):
     placeholder_values = data['placeholder_values']
     attach = data['attach_file']
 
-    with open(template_file) as file:
-        message = file.read()
+
             
     if 'key1' not in list(placeholder_values.keys()):
         
+        message = get_format_template(template_file)
+        data = {}
         for i in placeholder_values.values():
-            actual_value, replace_value  = i[0], i[1]
-            message = set_placeholder_values(message, actual_value, replace_value)
+            data[i[0]] =  i[1]
+        message = set_placeholder_values(message, data)
     else:
         print_format('No placeholder Text assigned!!')
+        with open(template_file) as file:
+            message = file.read()
 
     if os.getenv('SERVICE_PROVIDER') == 'Mailgun':
         if attach: 
