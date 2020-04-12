@@ -1,10 +1,7 @@
-lxml==4.4.2
+Jinja2==2.11.1
+QDarkStyle==2.8
 pandas==0.25.3
-PyQt5==5.14.1
-PyQt5-sip==12.7.0
-pyqt5-tools==5.13.0.1.5
-PyQtWebEngine==5.14.0
-PyQtWebKit==5.13.1
-python-dotenv==0.10.5
-sendgrid==6.1.1
-
+sendgrid==5.3.0
+requests==2.22.0
+PyQt5==5.14.2
+python-dotenv==0.12.0

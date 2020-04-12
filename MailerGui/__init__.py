@@ -1,1 +1,1 @@
-import .__main__ as mailer 
+import __main__ as mailer 

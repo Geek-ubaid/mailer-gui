@@ -10,6 +10,7 @@ import datetime
 
 import qdarkstyle
 import pandas as pd
+import jinja2schema
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from PyQt5.QtWebKit import *
@@ -264,11 +265,13 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
           
     def get_placeholder_values(self, template_file):
         with open(template_file) as file_:
-            content = file_.readlines()
-            for i in content:
-                if "{{" in content:
-                    print(i)
-        
+            content = file_.read()
+            placeholders = jinja2schema.infer(content).keys()
+        return list(placeholders)
+    
+    def set_combo_box_items(self,items):
+        for i in items:
+            self.placeholder_key.addItem(i)
         
     def get_template_file(self):
         options = QtWidgets.QFileDialog.Options()
@@ -277,8 +280,12 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             "Select File to upload", "","HTML Files (*.html)", options=options)
         if (self.template_file.endswith('.html')):      
             file_name = os.path.basename(self.template_file)  
-            self.get_placeholder_values(self.template_file)      
-            show_information_message('Template added succesfully!')
+            combo_box_items = self.get_placeholder_values(self.template_file) 
+            if len(combo_box_items) == 0:     
+                show_information_message('Template added succesfully! No Placeholders Found!')
+            else:
+                self.set_combo_box_items(combo_box_items)
+                show_information_message('Template added succesfully! Some Placeholders Found!')
             self.lineEdit.setText(file_name)
         else:
             show_information_message('No File is selected!')
