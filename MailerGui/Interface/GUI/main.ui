@@ -21,138 +21,6 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_8">
-    <item row="1" column="0">
-     <layout class="QGridLayout" name="gridLayout">
-      <property name="leftMargin">
-       <number>100</number>
-      </property>
-      <property name="topMargin">
-       <number>10</number>
-      </property>
-      <property name="rightMargin">
-       <number>100</number>
-      </property>
-      <property name="bottomMargin">
-       <number>10</number>
-      </property>
-      <property name="horizontalSpacing">
-       <number>23</number>
-      </property>
-      <item row="0" column="1">
-       <widget class="QLineEdit" name="recipients_label">
-        <property name="mouseTracking">
-         <bool>false</bool>
-        </property>
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="placeholderText">
-         <string>File name will be displayed here</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="5">
-       <widget class="QPushButton" name="view_button">
-        <property name="text">
-         <string>View </string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="0" alignment="Qt::AlignHCenter">
-       <widget class="QLabel" name="label_6">
-        <property name="font">
-         <font>
-          <family>Arial</family>
-          <pointsize>10</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Add Recipients</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="extract_button">
-        <property name="text">
-         <string>Import</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item row="18" column="0">
-     <spacer name="verticalSpacer_9">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="2" column="0">
-     <layout class="QGridLayout" name="gridLayout_3">
-      <property name="leftMargin">
-       <number>100</number>
-      </property>
-      <property name="topMargin">
-       <number>10</number>
-      </property>
-      <property name="rightMargin">
-       <number>100</number>
-      </property>
-      <property name="bottomMargin">
-       <number>10</number>
-      </property>
-      <property name="horizontalSpacing">
-       <number>23</number>
-      </property>
-      <item row="1" column="0">
-       <widget class="QLabel" name="label_7">
-        <property name="font">
-         <font>
-          <family>Arial</family>
-          <pointsize>10</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>Attachment     </string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="reset_attachment_button">
-        <property name="text">
-         <string>Reset</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QLineEdit" name="attachment_label">
-        <property name="readOnly">
-         <bool>true</bool>
-        </property>
-        <property name="placeholderText">
-         <string>File name will be displayed here</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="attachment_button">
-        <property name="text">
-         <string>Attach</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout_2">
       <property name="leftMargin">
@@ -197,8 +65,8 @@
       </item>
      </layout>
     </item>
-    <item row="4" column="0">
-     <spacer name="verticalSpacer_11">
+    <item row="15" column="0">
+     <spacer name="verticalSpacer_10">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -223,8 +91,8 @@
       </property>
      </spacer>
     </item>
-    <item row="14" column="0">
-     <spacer name="verticalSpacer_10">
+    <item row="4" column="0">
+     <spacer name="verticalSpacer_11">
       <property name="orientation">
        <enum>Qt::Vertical</enum>
       </property>
@@ -236,7 +104,33 @@
       </property>
      </spacer>
     </item>
-    <item row="19" column="0">
+    <item row="21" column="0">
+     <spacer name="verticalSpacer_8">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="16" column="0">
+     <spacer name="verticalSpacer_20">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="20" column="0">
      <layout class="QGridLayout" name="gridLayout_7">
       <property name="topMargin">
        <number>0</number>
@@ -275,33 +169,7 @@
       </item>
      </layout>
     </item>
-    <item row="20" column="0">
-     <spacer name="verticalSpacer_8">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="15" column="0">
-     <spacer name="verticalSpacer_20">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item row="17" column="0">
+    <item row="18" column="0">
      <widget class="QGroupBox" name="groupBox">
       <property name="font">
        <font>
@@ -393,6 +261,138 @@
       </layout>
      </widget>
     </item>
+    <item row="19" column="0">
+     <spacer name="verticalSpacer_9">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="1" column="0">
+     <layout class="QGridLayout" name="gridLayout">
+      <property name="leftMargin">
+       <number>100</number>
+      </property>
+      <property name="topMargin">
+       <number>10</number>
+      </property>
+      <property name="rightMargin">
+       <number>100</number>
+      </property>
+      <property name="bottomMargin">
+       <number>10</number>
+      </property>
+      <property name="horizontalSpacing">
+       <number>23</number>
+      </property>
+      <item row="0" column="1">
+       <widget class="QLineEdit" name="recipients_label">
+        <property name="mouseTracking">
+         <bool>false</bool>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>File name will be displayed here</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="view_button">
+        <property name="text">
+         <string>View </string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" alignment="Qt::AlignHCenter">
+       <widget class="QLabel" name="label_6">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Add Recipients</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="extract_button">
+        <property name="text">
+         <string>Import</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item row="2" column="0">
+     <layout class="QGridLayout" name="gridLayout_3">
+      <property name="leftMargin">
+       <number>100</number>
+      </property>
+      <property name="topMargin">
+       <number>10</number>
+      </property>
+      <property name="rightMargin">
+       <number>100</number>
+      </property>
+      <property name="bottomMargin">
+       <number>10</number>
+      </property>
+      <property name="horizontalSpacing">
+       <number>23</number>
+      </property>
+      <item row="1" column="0">
+       <widget class="QLabel" name="label_7">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+          <weight>50</weight>
+          <bold>false</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Attachment     </string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="reset_attachment_button">
+        <property name="text">
+         <string>Reset</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="attachment_label">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+        <property name="placeholderText">
+         <string>File name will be displayed here</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="attachment_button">
+        <property name="text">
+         <string>Attach</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
     <item row="9" column="0">
      <widget class="QGroupBox" name="groupBox_2">
       <property name="font">
@@ -423,114 +423,20 @@
       <property name="checked">
        <bool>false</bool>
       </property>
-      <layout class="QGridLayout" name="gridLayout_5">
+      <layout class="QGridLayout" name="gridLayout_6">
        <property name="leftMargin">
         <number>100</number>
-       </property>
-       <property name="topMargin">
-        <number>22</number>
        </property>
        <property name="rightMargin">
         <number>100</number>
        </property>
-       <property name="bottomMargin">
-        <number>22</number>
-       </property>
        <property name="horizontalSpacing">
-        <number>163</number>
+        <number>145</number>
        </property>
        <property name="verticalSpacing">
-        <number>22</number>
+        <number>56</number>
        </property>
-       <item row="0" column="0">
-        <widget class="QSplitter" name="splitter_4">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="handleWidth">
-          <number>11</number>
-         </property>
-         <widget class="QLabel" name="label">
-          <property name="text">
-           <string>Placeholder key</string>
-          </property>
-         </widget>
-         <widget class="QComboBox" name="placeholder_key">
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <item>
-           <property name="text">
-            <string>Select Key</string>
-           </property>
-          </item>
-         </widget>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QSplitter" name="splitter_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="handleWidth">
-          <number>11</number>
-         </property>
-         <widget class="QLabel" name="label_2">
-          <property name="text">
-           <string>Placeholder value   </string>
-          </property>
-         </widget>
-         <widget class="QSplitter" name="splitter">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="handleWidth">
-           <number>14</number>
-          </property>
-          <widget class="QComboBox" name="placeholder_value">
-           <item>
-            <property name="text">
-             <string>Select Value</string>
-            </property>
-           </item>
-          </widget>
-          <widget class="QLabel" name="label_8">
-           <property name="text">
-            <string>OR</string>
-           </property>
-          </widget>
-          <widget class="QLineEdit" name="custom_value">
-           <property name="styleSheet">
-            <string notr="true"/>
-           </property>
-           <property name="placeholderText">
-            <string>Enter Custom Value</string>
-           </property>
-          </widget>
-         </widget>
-        </widget>
-       </item>
-       <item row="2" column="0" alignment="Qt::AlignRight">
-        <widget class="QSplitter" name="splitter_3">
-         <property name="orientation">
-          <enum>Qt::Horizontal</enum>
-         </property>
-         <property name="handleWidth">
-          <number>20</number>
-         </property>
-         <widget class="QPushButton" name="add_placeholder_button">
-          <property name="text">
-           <string>Add</string>
-          </property>
-         </widget>
-         <widget class="QPushButton" name="reset_placeholder_button">
-          <property name="text">
-           <string>Reset</string>
-          </property>
-         </widget>
-        </widget>
-       </item>
-       <item row="0" column="1" rowspan="3">
+       <item row="0" column="2">
         <widget class="QListWidget" name="placeholder_view">
          <property name="styleSheet">
           <string notr="true"/>
@@ -543,17 +449,235 @@
          </property>
          <item>
           <property name="text">
-           <string>Placeholder Values</string>
+           <string>None</string>
           </property>
           <property name="font">
            <font>
-            <family>Arial</family>
-            <pointsize>10</pointsize>
-            <weight>75</weight>
-            <bold>true</bold>
+            <weight>50</weight>
+            <bold>false</bold>
            </font>
           </property>
          </item>
+        </widget>
+       </item>
+       <item row="0" column="0">
+        <widget class="QTabWidget" name="tabWidget">
+         <property name="tabPosition">
+          <enum>QTabWidget::North</enum>
+         </property>
+         <property name="tabShape">
+          <enum>QTabWidget::Rounded</enum>
+         </property>
+         <property name="currentIndex">
+          <number>1</number>
+         </property>
+         <property name="documentMode">
+          <bool>false</bool>
+         </property>
+         <property name="tabsClosable">
+          <bool>false</bool>
+         </property>
+         <widget class="QWidget" name="tab">
+          <attribute name="title">
+           <string>Bulk</string>
+          </attribute>
+          <layout class="QGridLayout" name="gridLayout_11">
+           <item row="2" column="0" colspan="2" alignment="Qt::AlignHCenter">
+            <widget class="QSplitter" name="splitter_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <widget class="QPushButton" name="add_placeholder_button">
+              <property name="text">
+               <string>Add</string>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="reset_placeholder_button">
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <layout class="QGridLayout" name="gridLayout_10">
+             <property name="leftMargin">
+              <number>20</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
+             <item row="1" column="0">
+              <widget class="QComboBox" name="placeholder_value">
+               <item>
+                <property name="text">
+                 <string>Select Value</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="text">
+                <string>Placeholder value   </string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="0" column="0">
+            <layout class="QGridLayout" name="gridLayout_5">
+             <property name="leftMargin">
+              <number>20</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label">
+               <property name="text">
+                <string>Placeholder key</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QComboBox" name="placeholder_key">
+               <property name="styleSheet">
+                <string notr="true"/>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Select Key</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item row="1" column="0">
+            <spacer name="verticalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="tab_2">
+          <attribute name="title">
+           <string>Test</string>
+          </attribute>
+          <layout class="QVBoxLayout" name="verticalLayout">
+           <item>
+            <layout class="QGridLayout" name="gridLayout_9">
+             <property name="leftMargin">
+              <number>20</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="text">
+                <string>Placeholder Key</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QComboBox" name="test_placeholder_key">
+               <item>
+                <property name="text">
+                 <string>Select key</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_3">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QGridLayout" name="gridLayout_12">
+             <property name="leftMargin">
+              <number>20</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>20</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_5">
+               <property name="text">
+                <string>Placeholder Value</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLineEdit" name="test_placeholder_key_2">
+               <property name="placeholderText">
+                <string>Add test value</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QSplitter" name="splitter">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="handleWidth">
+              <number>20</number>
+             </property>
+             <widget class="QPushButton" name="test_add_placeholder_button">
+              <property name="text">
+               <string>Add</string>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="test_reset_placeholder_button">
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
        </item>
       </layout>

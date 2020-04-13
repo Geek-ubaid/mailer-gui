@@ -103,7 +103,6 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
         super(Loginwindow, self).__init__(parent)
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon(r'Assets\logos\logo-mailer.png'))
-        self.setWindowTitle("MailerGUI")
         self.login.clicked.connect(self.login_check)
         self.reset.clicked.connect(self.reset_check)
         finish = QtWidgets.QAction("Quit",self)
@@ -114,15 +113,33 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
             return True
         else:
             return False
-
+        
+    def check_for_saved_password(self):
+        
+        settings = QSettings()
+        check_state = settings.value('settings/username','admin', type=str)
+        return check_state
+    
+    def save_password_settings(self, username, password):
+        
+        settings = QSettings()
+        settings.setValue('settings/username', username)
+        settings.setValue('settings/password', password) 
+        settings.sync()
+    
     def login_check(self):
+        
+        if print(self.check_for_saved_password()):
+            print('settings saveed!')
         
         LOGIN_NAME = os.getenv('LOGIN_NAME')
         PASSKEY = os.getenv('PASSKEY')
-        passkey = self.password_text.text()
-        username = self.user.text()
+        passkey = self.password_text_box.text()
+        username = self.username_text_box.text()
         print(passkey,username)
         if (username == LOGIN_NAME and passkey == PASSKEY):
+            if self.forget_password.isChecked() == True:
+                self.save_password_settings(username,passkey)
             try:
                 self.window = MainWindow()
                 self.close()
@@ -157,7 +174,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.template_file = ''
         self.subject = ''
         self.recipients_df = ''
-        
+        self.dynamic_placeholder = []   
+            
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon(r'Assets\logos\logo-mailer.png'))
         self.setWindowTitle("MailerGUI")
@@ -177,6 +195,10 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.actionSample_Recipient.triggered.connect(self.show_sample_csv)
         self.actionReset_Attachment.triggered.connect(self.reset_attachment_file)
         self.actionReset_All.triggered.connect(self.reset_all)
+        self.add_placeholder_button.setDisabled(True)
+        self.reset_placeholder_button.setDisabled(True)
+        self.add_placeholder_button.clicked.connect(self.add_placeholders)
+        self.reset_placeholder_button.clicked.connect(self.reset_placeholder)
         
         finish = QtWidgets.QAction("Quit",self)
         finish.triggered.connect(self.close_window)
@@ -186,6 +208,48 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             sys.exit()         
         else:
             pass
+        
+    def add_placeholders(self):
+        if self.placeholder_key.currentText() == 'Select Key' or \
+            self.placeholder_value.currentText() == 'Select Value':
+                show_warning_message('Select proper key value for placeholder!')
+        else:
+            if self.placeholder_view.item(0).text() == 'None': 
+                self.placeholder_view.clear() 
+                self.placeholder_view.addItem(
+                    self.placeholder_key.currentText() + " : " + self.placeholder_value.currentText()
+                )
+                self.dynamic_placeholder.append(
+                        (self.placeholder_key.currentText(),self.placeholder_value.currentText())
+                    )
+            else:
+                if (self.check_if_placeholder_exists(self.placeholder_key.currentText())):
+                    show_warning_message("PLaceholder already present!")
+                    
+                else:
+                    self.placeholder_view.addItem(
+                        self.placeholder_key.currentText() + " : " + self.placeholder_value.currentText()
+                    )
+                    self.dynamic_placeholder.append(
+                        (self.placeholder_key.currentText(),self.placeholder_value.currentText())
+                    )
+            self.placeholder_value.setCurrentIndex(0)
+            self.placeholder_key.setCurrentIndex(0)
+            
+    def check_if_placeholder_exists(self,placeholder_key):
+        for i in self.dynamic_placeholder:
+            if i[0] == placeholder_key:
+                return True
+        return False        
+    
+    def reset_placeholder(self):
+        self.placeholder_view.clear()
+        self.placeholder_view.addItem('None')
+    
+    def set_add_reset_enable(self):
+        if self.placeholder_key.count() > 1 and self.placeholder_value.count() > 1:
+            self.add_placeholder_button.setDisabled(False)
+            self.reset_placeholder_button.setDisabled(False)
         
     def reset_all(self):
         
@@ -237,8 +301,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
             
             total_recipient = self.summary.return_total_recipients(self.recipients_df)
             recipient_file = self.recipient_file
-            placeholders = self.summary.return_placeholder_text(self.placeholder_text.toPlainText())
-            placeholder_pairs = self.summary.return_placeholder_pair(self.placeholder_text.toPlainText())
+            placeholders = self.summary.return_placeholder_text(self.dynamic_placeholder)
+            placeholder_pairs = self.dynamic_placeholder
             template_file = self.template_file
             subject = self.subject_text.text()
             attachment_file = self.attachment_file
@@ -256,10 +320,9 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         
             
     def show_recipients(self):
-        if self.recipients_df == '':
+        if isinstance(self.recipients_df,str):
             show_warning_message("No file is selected!")
         else:
-            print(self.recipient_file, self.recipients_df)
             self.recipient_window = RecipientWindow(self.recipients_df)
             self.recipient_window.exec_()
           
@@ -285,6 +348,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
                 show_information_message('Template added succesfully! No Placeholders Found!')
             else:
                 self.set_combo_box_items(combo_box_items)
+                self.set_add_reset_enable()
                 show_information_message('Template added succesfully! Some Placeholders Found!')
             self.lineEdit.setText(file_name)
         else:
@@ -314,6 +378,10 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.attachment_label.setText('')
         self.attachment_file = ''
         
+    def set_placeholder_values(self,placeholder_values):
+        for i in placeholder_values:
+            self.placeholder_value.addItem(i)
+    
     def extract_recipients(self):
     
         options = QtWidgets.QFileDialog.Options()
@@ -324,7 +392,9 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         if (self.recipient_file.endswith('.csv')):      
             file_name = os.path.basename(self.recipient_file)
             try:
-                self.recipients_df = pd.read_csv(self.recipient_file)            
+                self.recipients_df = pd.read_csv(self.recipient_file)
+                self.set_placeholder_values(self.recipients_df.columns.tolist())
+                self.set_add_reset_enable()           
             except:
                 show_warning_message('Error reading recipients file!')
             
@@ -342,7 +412,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
                     data = {'recipient_file' : self.test_email_label.text(),\
                             'template_file' : self.template_file,\
                             'subject' : self.subject_text.text(),\
-                            'placeholder_values' : summary.return_placeholder_pair(self.placeholder_text.toPlainText()),\
+                            'placeholder_values' : self.dynamic_placeholder,\
                             'attach_file' : self.attachment_file}
                     data = json.dumps(data)
                     print('starting')
@@ -555,7 +625,6 @@ if __name__ == '__main__':
     global app
     app = QtWidgets.QApplication(sys.argv)
     app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
-    # app.setStyleSheet(qdarkstyle.load_stylesheet(qt_api='pyqt5'))
     window = Loginwindow()
     if not(window.check_for_env()):
         begin_window = SetupWindow()

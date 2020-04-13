@@ -93,45 +93,17 @@ def send_mailgun_bulk_mail(to_mail,from_mail,subject,message,placeholder,attach=
             
             ## for placeholder values
             
-            if len(placeholder['const_placeholders']) > 0 and len(placeholder['excel_placeholder']) == 0:
-                
-                ## for mails with constant placeholders and no dynamic placeholders
-                
-                for i in placeholder['çonst_placeholders']:
-                    message = set_placeholder_values(message,i[0], i[1])
-                for index in range(len(to_mail)):
-                    to_mail_address = to_mail.iloc[index]['Email']
-                    mailgun_with_attachment(from_mail, to_mail_address, subject, message,\
-                         (attach_file_name, attach_content, attach_type))
-                    
-                    
-            elif len(placeholder['excel_placeholder']) > 0 and len(placeholder['const_placeholders']) == 0:
-               
-                ## for mails with dynmaic placeholders and no constant placeholders
-               
-                for index in range(len(to_mail)):
-                    for place in placeholder['excel_placeholder']:
-                        message = set_placeholder_values(message, place[0], to_mail.iloc[index][place[1]])
-                    print_format(message)
-                    to_mail_address = to_mail.iloc[index]['Email']
-                    mailgun_with_attachment(from_mail, to_mail_address, subject, message,\
-                         (attach_file_name, attach_content, attach_type))
-                    
-                    
-            elif len(placeholder['excel_placeholder']) > 0 and len(placeholder['const_placeholders']) > 0:
-                
-                ## for both constant and dynamic placeholders
-                
-                for index in placeholder['const_placeholder']:
-                    message = set_placeholder_values(message, index[0], index[1])
-                    
-                for index in range(len(to_mail)):
-                    for place in placeholder['excel_placeholder']:
-                        message = set_placeholder_values(message, place[0], to_mail.iloc[index][place[1]])
-                    print_format(message)
-                    to_mail_address = to_mail.iloc[index]['Email']
-                    mailgun_with_attachment(from_mail, to_mail_address, subject, message,\
-                         (attach_file_name, attach_content, attach_type))
+            data = {}
+            
+            ## for mails with dynmaic placeholders s
+            
+            for index in range(len(to_mail)):
+                for place in placeholder['excel_placeholder']:
+                    data[place[0]] = to_mail.iloc[index][place[1]]
+                formatted_message = set_placeholder_values(message, data)
+                to_mail_address = to_mail.iloc[index]['Email']
+                mailgun_with_attachment(from_mail, to_mail_address, subject, formatted_message,\
+                        (attach_file_name, attach_content, attach_type))
                     
         else:
             
@@ -150,42 +122,16 @@ def send_mailgun_bulk_mail(to_mail,from_mail,subject,message,placeholder,attach=
         if placeholder:
            
             ## for placeholder values
-           
-            if len(placeholder['const_placeholders']) > 0 and len(placeholder['excel_placeholder']) == 0:
-           
-                ## for mails with constant placeholders and no dynamic placeholders
-           
-                for i in placeholder['çonst_placeholders']:
-                    message = set_placeholder_values(message,i[0], i[1])
-                for index in range(len(to_mail)):
-                    to_mail_address = to_mail.iloc[index]['Email']
-                    mailgun_without_attachment(from_mail, to_mail_address, subject, message)
-                    
-                    
-            elif len(placeholder['excel_placeholder']) > 0 and len(placeholder['const_placeholders']) == 0:
+               data = {}
                
-                ## for mails with dynmaic placeholders and no constant placeholders
+                ## for mails with dynmaic placeholders 
                
                 for index in range(len(to_mail)):
                     for place in placeholder['excel_placeholder']:
-                        message = set_placeholder_values(message, place[0], to_mail.iloc[index][place[1]])
-                    print_format(message)
+                        data[place[0]] = to_mail.iloc[index][place[1]]
+                    formatted_message = set_placeholder_values(message, data)
                     to_mail_address = to_mail.iloc[index]['Email']
-                    mailgun_without_attachment(from_mail, to_mail_address, subject, message)                    
-            
-            elif len(placeholder['excel_placeholder']) > 0 and len(placeholder['const_placeholders']) > 0:
-                
-                ## for both constant and dynamic placeholders
-                
-                for index in placeholder['const_placeholder']:
-                    message = set_placeholder_values(message, index[0], index[1])
-                    
-                for index in range(len(to_mail)):
-                    for place in placeholder['excel_placeholder']:
-                        message = set_placeholder_values(message, place[0], to_mail.iloc[index][place[1]])
-                    print_format(message)
-                    to_mail_address = to_mail.iloc[index]['Email']
-                    mailgun_without_attachment(from_mail, to_mail_address, subject, message)
+                    mailgun_without_attachment(from_mail, to_mail_address, subject, formatted_message)                    
                     
         else:
             
@@ -220,48 +166,16 @@ def send_sendgrid_bulk_mail(to,sender,subject,message,placeholder,attach=False):
             ## for placeholder values
             
             data_for_placeholder = {}
+               
+            ## for mails with dynmaic placeholders and no constant placeholders
+        
+            for index in range(len(to)):
+            for place in placeholder['excel_placeholder']:
+                data_for_placeholder[place[0]] = to.iloc[index][place[1]]
+            formatted_message = set_placeholder_values(message, data_for_placeholder)
+            to_email = to.iloc[index]['Email']
+            sendgrid_with_attachment(sender,to_email,subject,formatted_message,attachment)
             
-            if len(placeholder['const_placeholders']) > 0 and len(placeholder['excel_placeholder']) == 0:
-                
-                ## for mails with constant placeholders and no dynamic placeholders
-                
-                for i in placeholder['const_placeholders']:
-                    data_for_placeholder[i[0]] = i[1]
-                    
-                formatted_message = set_placeholder_values(message,data_for_placeholder)
-                print_format(formatted_message)
-
-                for index in range(len(to)):
-                    to_email = to.iloc[index]['Email']
-                    # sendgrid_with_attachment(sender,to_email,subject,formatted_message,attachment)
-                    
-            elif len(placeholder['excel_placeholder']) > 0 and len(placeholder['const_placeholders']) == 0:
-               
-                ## for mails with dynmaic placeholders and no constant placeholders
-               
-                 for index in range(len(to)):
-                    for place in placeholder['excel_placeholder']:
-                        data_for_placeholder[place[0]] = to.iloc[index][place[1]]
-                    formatted_message = set_placeholder_values(message, data_for_placeholder)
-                    print_format(formatted_message)
-                    to_email = to.iloc[index]['Email']
-                    # sendgrid_with_attachment(sender,to_email,subject,formatted_message,attachment)
-                    
-            elif len(placeholder['excel_placeholder']) > 0 and len(placeholder['const_placeholders']) > 0:
-                
-                ## for both constant and dynamic placeholders
-                
-                for index in placeholder['const_placeholders']:
-                    data_for_placeholder[index[0]] = index[1]
-                
-                for index in range(len(to)):
-                    for place in placeholder['excel_placeholder']:
-                        data_for_placeholder[place[0]] = to.iloc[index][place[1]]
-                    
-                    formatted_message = set_placeholder_values(message, data_for_placeholder)
-                    print_format(formatted_message)
-                    to_email = to.iloc[index]['Email']
-                    # sendgrid_with_attachment(sender,to_email,subject,message,attachment)
         else:
             
             ## for no placeholder values
@@ -278,54 +192,22 @@ def send_sendgrid_bulk_mail(to,sender,subject,message,placeholder,attach=False):
             ## for placeholder values
             
             data_for_placeholder = {}
+           
+            ## for mails with dynmaic placeholders and no constant placeholders
         
-            if len(placeholder['const_placeholders']) > 0 and len(placeholder['excel_placeholder']) == 0:
-                
-                ## for mails with constant placeholders and no dynamic placeholders
-                
-                for i in placeholder['const_placeholders']:
-                    data_for_placeholder[i[0]] = i[1]
-                    
-                formatted_message = set_placeholder_values(message,data_for_placeholder)
-                print_format(formatted_message)
-
-                for index in range(len(to)):
-                    to_email = to.iloc[index]['Email']
-                    # sendgrid_without_attachment(sender,to_email,subject,formatted_message)
-                    
-            elif len(placeholder['excel_placeholder']) > 0 and len(placeholder['const_placeholders']) == 0:
-               
-                ## for mails with dynmaic placeholders and no constant placeholders
-               
-                 for index in range(len(to)):
-                    for place in placeholder['excel_placeholder']:
-                        data_for_placeholder[place[0]] = to.iloc[index][place[1]]
-                    formatted_message = set_placeholder_values(message, data_for_placeholder)
-                    print_format(formatted_message)
-                    to_email = to.iloc[index]['Email']
-                    # sendgrid_without_attachment(sender,to_email,subject,formatted_message)
-                    
-            elif len(placeholder['excel_placeholder']) > 0 and len(placeholder['const_placeholders']) > 0:
-                
-                ## for both constant and dynamic placeholders
-                
-                for index in placeholder['const_placeholders']:
-                    data_for_placeholder[index[0]] = index[1]
-                
-                for index in range(len(to)):
-                    for place in placeholder['excel_placeholder']:
-                        data_for_placeholder[place[0]] = to.iloc[index][place[1]]
-                    
-                    formatted_message = set_placeholder_values(message, data_for_placeholder)
-                    print_format(formatted_message)
-                    to_email = to.iloc[index]['Email']
-                    # sendgrid_without_attachment(sender,to_email,subject,formatted_message)
+            for index in range(len(to)):
+            for place in placeholder['excel_placeholder']:
+                data_for_placeholder[place[0]] = to.iloc[index][place[1]]
+            formatted_message = set_placeholder_values(message, data_for_placeholder)
+            to_email = to.iloc[index]['Email']
+            sendgrid_without_attachment(sender,to_email,subject,formatted_message)
+        
         else:
             
             ## for no placeholder values
             for index in range(len(to)):
                 to_email = to[index]
-                # sendgrid_without_attachment(sender,to_email,subject,message)
+                sendgrid_without_attachment(sender,to_email,subject,message)
 
         
             
@@ -362,7 +244,7 @@ def main(test_data = None):
     placeholder_values = data['placeholder_values']
     attach = data['attach_file']
         
-    if 'key1' in list(placeholder_values.keys()):
+    if len(placeholder_values) == 0:
         
         placeholder = False
         df = pd.read_csv(recipient_file)
@@ -377,17 +259,8 @@ def main(test_data = None):
         message = get_format_template(template_file)
         recipients = pd.read_csv(recipient_file)
         
-        const_placeholders = []
-        excel_placeholders = []
-        
-        for i in list(placeholder_values.items()):
-            if i[1] in recipients.columns.tolist():
-                excel_placeholders.append(i)
-            else:
-                const_placeholders.append(i)
-        
-        placeholder = {'const_placeholders' : const_placeholders,\
-                        'excel_placeholder' : excel_placeholders}
+        excel_placeholders = placeholder_values       
+        placeholder = {'excel_placeholder' : excel_placeholders}
     
     if os.getenv('SERVICE_PROVIDER') == 'Mailgun':
         if attach: 

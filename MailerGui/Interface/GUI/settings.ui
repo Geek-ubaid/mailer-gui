@@ -6,14 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>726</width>
-    <height>453</height>
+    <width>746</width>
+    <height>512</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Settings</string>
   </property>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>9</x>
@@ -27,6 +27,12 @@
      <widget class="QGroupBox" name="groupBox">
       <property name="title">
        <string>Login Credentials</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
       </property>
       <widget class="QLineEdit" name="username_box">
        <property name="geometry">
@@ -64,6 +70,9 @@
       <property name="title">
        <string>Choose Mail Provider</string>
       </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
       <widget class="QRadioButton" name="sendgrid_check">
        <property name="geometry">
         <rect>
@@ -97,6 +106,9 @@
       <property name="title">
        <string>Mail Provider Credentials</string>
       </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
       <widget class="QLineEdit" name="apikey_box">
        <property name="geometry">
         <rect>
@@ -127,16 +139,23 @@
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>460</x>
-     <y>400</y>
+     <x>470</x>
+     <y>470</y>
      <width>239</width>
      <height>25</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="2">
+     <widget class="QPushButton" name="apply_button">
+      <property name="text">
+       <string>Apply</string>
+      </property>
+     </widget>
+    </item>
     <item row="0" column="0">
      <widget class="QPushButton" name="ok_button">
       <property name="text">
@@ -148,13 +167,6 @@
      <widget class="QPushButton" name="cancel_button">
       <property name="text">
        <string>Cancel</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="2">
-     <widget class="QPushButton" name="apply_button">
-      <property name="text">
-       <string>Apply</string>
       </property>
      </widget>
     </item>
