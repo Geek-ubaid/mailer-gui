@@ -58,10 +58,10 @@ class StoreCredentials():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT,
             password TEXT,
-            mail_provider TEXT,
-            provider_key TEXT,
-            domain_name TEXT,
-            from_email TEXT
+            mailprovider TEXT,
+            providerkey TEXT,
+            domainname TEXT,
+            fromemail TEXT
         );
         """
         self.execute_query(query)

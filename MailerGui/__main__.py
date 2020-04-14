@@ -32,7 +32,7 @@ from Interface import beginScreen
 from Screens import viewSummary
 from Screens import Send_test
 from Screens.utils import mailto
-from Screens.modelDataframe import PandasModel
+from Screens.Model_dataframe import PandasModel
 
 load_dotenv()
 
@@ -82,7 +82,7 @@ class SetupWindow(QtWidgets.QDialog,beginScreen.Ui_Dialog):
         self.setupUi(self)
         self.setWindowIcon(QtGui.QIcon(r'Assets\logos\logo-mailer.png'))
         self.setWindowTitle("Welcome to MailerGUI")
-        self.start_button.clicked.connect(self.show_settings)
+        self.start_button.clicked.connect(self.check_settings_button)
         finish = QtWidgets.QAction("Quit",self)
         finish.triggered.connect(self.close_window)
     
@@ -90,6 +90,38 @@ class SetupWindow(QtWidgets.QDialog,beginScreen.Ui_Dialog):
         setting_window = SettingScreen(0)
         self.close()
         setting_window.exec_()
+        
+    def check_settings_button(self):
+        if self.start_button.objectName() == "start_button":
+            self.change_frame()
+        else:
+            self.show_settings()
+    
+    def change_frame(self):
+        
+        self.start_button.setText("Finish Up Settings")
+        self.start_button.setObjectName('Settings_button')
+        self.create_from_username()
+    
+    def create_from_username(self):
+        
+        self.gridLayout_7 = QGridLayout()
+        self.gridLayout_7.setContentsMargins(100, -1, 100, -1)
+        self.gridLayout_7.setHorizontalSpacing(71)
+        self.gridLayout_7.setObjectName("gridLayout_4")
+        font = QFont()
+        font.setFamily("Segoe UI")
+        font.setPointSize(12)
+        self.label_3.setFont(font)
+        self.label_3.setObjectName("label_4")
+        self.label_3.setText("Enter Organization Mail")
+        self.gridLayout_7.addWidget(self.label_3, 0, 0, 1, 1)
+        self.from_username = QLineEdit(self.frame_2)
+        self.from_username.setObjectName("from_username")
+        self.from_username.setPlaceholderText("Enter email")
+        self.gridLayout_7.addWidget(self.from_username, 0, 1, 1, 1)
+        self.gridLayout_4.addLayout(self.gridLayout_7, 0, 0, 1, 1)
+       
     
     def close_window(self):
         global app
