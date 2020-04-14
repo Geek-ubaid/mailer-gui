@@ -19,9 +19,6 @@ class GenerateSummary(object):
             placeholders.append(i[0])
         return str(",".join(placeholders))
 
-    def return_placeholder_pair(self, placeholder):
-        json_content = json.loads(placeholder)
-        return json_content
     
         
         
