@@ -12,9 +12,28 @@ class StoreCredentials():
     def __init__(self):
         super(StoreCredentials, self).__init__()
         
-    def __del__(self):
-        self.connection.close()
-    
+    def check_for_creds_db(self):
+        print(os.path.exists(self.DB_PATH))
+        if os.path.exists(self.DB_PATH):
+            # if self.check_if_any_table_exists():
+            #     return True
+            # else:
+            return True
+        else:
+            return False
+        
+    def check_if_any_table_exists(self):
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='user_db' ''')
+        #if the count is 1, then table exists
+        if c.fetchone()[0]==1 : 
+            conn.close()
+            return True
+        else :
+            conn.close()
+            return False
+                    
     def check_valid_connection(self, conn):
         if conn == None:
             return False
@@ -89,7 +108,7 @@ class StoreCredentials():
         
         key = []
         value = []
-        
+        print(query_params)
         for i in query_params:
             print(i)
             if i[0] == 'password':
@@ -107,14 +126,17 @@ class StoreCredentials():
         result = self.execute_query(conn,query)
         return result
     
-    def update_credentials(self,conn,filter_param ,query_params):
+    def update_credentials(self, conn, filter_param ,query_params):
         
         update_params = []
            
         for i in query_params:
             if i[0] == 'password':
-                hashed_password = self.hash_credentials(i[1]).decode('utf-8')
-                update_params.append(i[0] + '=' + "'" + str(hashed_password) + "'")
+                if i[1]:
+                    hashed_password = self.hash_credentials(i[1]).decode('utf-8')
+                    update_params.append(i[0] + '=' + "'" + str(hashed_password) + "'")
+                else:
+                    pass
             else:
                 update_params.append(i[0] + '=' + "'" + i[1] + "'")
             
@@ -123,6 +145,7 @@ class StoreCredentials():
         SET {}
         WHERE {} = {};
         """.format(",".join(update_params),filter_param[0], "'" + filter_param[1] + "'" )
+        
         print(query)
         result = self.execute_query(conn,query)
         return result

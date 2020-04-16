@@ -6,7 +6,7 @@ MailerGui/Assets/images/
 MailerGui/Screens/Test_send_bulk.py
 MailerGui/Interface/frame2.py
 MailerGui/Interface/GUI/begin2_frame.ui
-MailerGui/Assets/App Data/credentials.db
+MailerGui/Assets/App Data/
 venv
 test.py
 test_stream.py

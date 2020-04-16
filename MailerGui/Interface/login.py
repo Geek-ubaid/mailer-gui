@@ -25,7 +25,7 @@ class Ui_loginwindow(object):
         self.gridLayout.setObjectName("gridLayout")
         self.label = QtWidgets.QLabel(loginwindow)
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("Assets/logos/logo-mailer.png"))
+        self.label.setPixmap(QtGui.QPixmap("Assets/Icons/logo-mailer.png"))
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1, QtCore.Qt.AlignRight)
         self.label_2 = QtWidgets.QLabel(loginwindow)

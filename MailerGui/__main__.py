@@ -81,14 +81,14 @@ class SetupWindow(QtWidgets.QDialog,beginScreen.Ui_Dialog):
     def __init__(self):
         super(SetupWindow,self).__init__(parent=None)
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon(r'Assets\logos\logo-mailer.png'))
+        self.setWindowIcon(QtGui.QIcon(r'Assets\Icons\logo-mailer.png'))
         self.setWindowTitle("Welcome to MailerGUI")
         self.start_button.clicked.connect(self.check_settings_button)
         finish = QtWidgets.QAction("Quit",self)
         finish.triggered.connect(self.close_window)
     
     def show_settings(self):
-        details = {'fromemail' : self.from_username}
+        details = {'fromemail' : self.from_username.text()}
         setting_window = SettingScreen(0, details)
         self.close()
         setting_window.exec_()
@@ -136,18 +136,18 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
     def __init__(self,parent=None):
         super(Loginwindow, self).__init__(parent)
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon(r'Assets\logos\logo-mailer.png'))
+        self.setWindowIcon(QtGui.QIcon(r'Assets\Icons\logo-mailer.png'))
         self.login.clicked.connect(self.login_check)
         self.reset.clicked.connect(self.reset_check)
         finish = QtWidgets.QAction("Quit",self)
         finish.triggered.connect(self.close_window)
         
-    def check_for_env(self):
-        if os.getenv('LOGIN_NAME') and os.getenv('PASSKEY'):
-            return True
-        else:
-            return False
+    def check_for_settings(self):
         
+        store_creds = StoreCredentials()
+        response =  store_creds.check_for_creds_db()
+        return response
+            
     def check_for_saved_password(self):
         
         settings = QSettings()
@@ -211,7 +211,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.dynamic_placeholder = []   
             
         self.setupUi(self)
-        self.setWindowIcon(QtGui.QIcon(r'Assets\logos\logo-mailer.png'))
+        self.setWindowIcon(QtGui.QIcon(r'Assets\Icons\logo-mailer.png'))
         self.setWindowTitle("MailerGUI")
         self.recipients_label.setText(self.recipient_file)
         self.attachment_label.setText(self.attachment_file)
@@ -552,10 +552,18 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
             self.groupBox.setChecked(True)
             self.groupBox_3.setChecked(False)
         else:
+            self.saved_details = self.get_credentials()
+            self.set_saved_values(self.saved_details)
             self.cancel_button.setEnabled(True)
+            self.apply_button.setEnabled(False)
+            
         self.cancel_button.clicked.connect(self.cancel_operation)
-        self.sendgrid_check.clicked.coonect(self.sendgrid_provider)
+        self.sendgrid_check.clicked.connect(self.sendgrid_provider)
         self.mailgun_check.clicked.connect(self.mailgun_provider)
+        self.username_box.textChanged.connect(self.enable_applybutton)
+        self.password_box.textChanged.connect(self.enable_applybutton)
+        self.domain_box.textChanged.connect(self.enable_applybutton)
+        self.apikey_box.textChanged.connect(self.enable_applybutton)
     
     def sendgrid_provider(self):
         self.mail_provider = 'sendgrid'
@@ -570,6 +578,7 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
                                  </body>
                                  </html>
                 """)
+        self.apply_button.setEnabled(True)
         
     def mailgun_provider(self):
         self.mail_provider = 'mailgun'
@@ -582,38 +591,95 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
                                  </body>
                                  </html>
                 """)
+        self.apply_button.setEnabled(True)
         
-    def get_credentials(self):
-        pass
-    
-    def update_credentials(self):
-        pass
-    
-    def create_credentials(self, details):
+    def enable_applybutton(self):
+        self.apply_button.setEnabled(True)
+        
+    def get_credentials(self, params):
         payload = []
-        for i in details.items():
-            payload.append(i[0], i[1])
+        for i in params:
+            payload.append(i)
+            
+        store_creds = StoreCredentials()
+        conn = store_creds.get_connection()
+        verify = store_creds.check_valid_connection(conn)
+        
+        if verify:
+            result = store_creds.get_credentials(conn, payload)
+            if result!='Error':
+                self.set_saved_values(result)
+            else:
+                pass
+        else:
+            show_warning_message("Some Error occured!") 
+        
+        del store_creds 
+    
+    def update_credentials(self,params,saved_params):
+        
+        filter_params = ('username', saved_params[1])
+        payload = []
+        for i in params.items:
+            payload.append((i[0], i[1]))
+            
+        store_creds = StoreCredentials()
+        conn = store_creds.get_connection()
+        verify = store_creds.check_valid_connection(conn)
+        if verify:
+            result = store_creds.update_credentials(conn, filter_param, payload)
+            if result == 'Success':
+                show_information_message('Settings Saved!')
+            else:
+                show_warning_message('Settings saving Failed! Try Again!')
+        else:
+            show_warning_message("No data found!")
+
+        del store_creds
+        
+    def create_credentials(self, params):
+        payload = []
+        for i in params.items():
+            payload.append((i[0], i[1]))
         
         store_creds = StoreCredentials()
         conn = store_creds.get_connection()
         verify = store_creds.check_valid_connection(conn)
         if verify:
-            res = store_creds.create_table(conn)
-            res = store_creds.insert_crednetials(conn, payload)
+            res_table = store_creds.create_table(conn)
+            result = store_creds.insert_credentials(conn, payload)
+            if result == 'Success':
+                show_information_message('Settings Applied!')
+            else:
+                show_warning_message('Settings saving Failed! Try Again!')
+            
         else:
             show_warning_message("Credentials not saved try again!")
-            return False
+        
+        del store_creds
+        
     def cancel_operation(self):
         self.close()
         
     def set_saved_values(self, response):
-        pass
-    
+        
+        self.username_box.setText(response[1])
+        self.password_box.setText(response[2])
+        self.mail_provider = response[3]
+        if self.mail_provider == 'sendgrid':
+            self.sendgrid_check.setChecked(True)
+            self.domain_box.setDisabled(True)
+        else:
+            self.mailgun_check.setChecked(True)
+            self.domain_box.setText(response[5])
+        self.apikey_box.setText(response[4])
+            
     def confirm_variables(self):
+        
         if self.start_mode == 0:
             login_window = Loginwindow()
             self.close()
-            login_window.exec_()
+            login_window.show()
         else:
             self.close()
     
@@ -635,7 +701,7 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
                 self.details['mailprovider'] = self.mail_provider
 
                 if self.apikey_box.text():
-                    self.details['providerkey'] = self..text()
+                    self.details['providerkey'] = self.apikey_box.text()
             else:
                 pass
             
@@ -644,21 +710,38 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
                     self.details['domainname'] = self.domain_box.text()
             else:
                 pass
+            
             response = self.create_credentials(self.details)       
         
         else:
+                        
+            if self.username_box.text():    
+                self.details['username'] = self.username_box.text()
+            else:
+                show_warning_message('No username set. Cannot proceed !')
             
-            response = self.get_credentials()
-            self.set_saved_values(response)
+            if self.password_box.text():
+                self.details['password'] = self.password_box.text()
+            else:
+                show_warning_message('No password set. Cannot proceed !')
+            
+            if self.mail_provider:
+                self.details['mailprovider'] = self.mail_provider
+
+                if self.apikey_box.text():
+                    self.details['providerkey'] = self.apikey_box.text()
+            else:
+                pass
+            
+            if self.mail_provider == 'mailgun':
+                if self.domain_box.text():
+                    self.details['domainname'] = self.domain_box.text()
+            else:
+                pass
+            
+            response = self.update_credentials(self.details, self.saved_details)       
         
-        self.details['username'] = self.username_box.text()
-        self.details['password'] = self.password_box.text()
-        self.details['providerkey'] = self.apikey_box.text()
-        self.details['domainname'] = self.domain_box.text()
-        if self.sendgrid_check.isChecked():
-            self.details['mailprovider'] = 'Sendgrid'
-        elif self.mailgun_check.isChecked():
-            self.details['mailprovider'] = 'MailGun'
+
        
         
             
@@ -745,7 +828,7 @@ if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
     window = Loginwindow()
-    if not(window.check_for_env()):
+    if not(window.check_for_settings()):
         begin_window = SetupWindow()
         begin_window.show()
     else:
