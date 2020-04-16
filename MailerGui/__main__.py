@@ -33,6 +33,7 @@ from Screens import viewSummary
 from Screens import Send_test
 from Screens.utils import mailto
 from Screens.Model_dataframe import PandasModel
+from Screens.Store_credentials import StoreCredentials
 
 load_dotenv()
 
@@ -87,7 +88,8 @@ class SetupWindow(QtWidgets.QDialog,beginScreen.Ui_Dialog):
         finish.triggered.connect(self.close_window)
     
     def show_settings(self):
-        setting_window = SettingScreen(0)
+        details = {'fromemail' : self.from_username}
+        setting_window = SettingScreen(0, details)
         self.close()
         setting_window.exec_()
         
@@ -536,24 +538,77 @@ class SummaryScreen(QtWidgets.QDialog,summaryScreen.Ui_Dialog):
 class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
     
     """This class is for changing the configuration or settings of the mail account"""
-    def __init__(self, startmode):
+    def __init__(self, startmode, details):
         super(SettingScreen, self).__init__()
         self.setupUi(self)
+        self.mail_provider = ''
+        self.details = details
         self.start_mode = startmode
+        
         self.apply_button.clicked.connect(self.set_env_variables)
         self.ok_button.clicked.connect(self.confirm_variables)
         if startmode == 0:
             self.cancel_button.setEnabled(False)
+            self.groupBox.setChecked(True)
+            self.groupBox_3.setChecked(False)
         else:
             self.cancel_button.setEnabled(True)
         self.cancel_button.clicked.connect(self.cancel_operation)
+        self.sendgrid_check.clicked.coonect(self.sendgrid_provider)
+        self.mailgun_check.clicked.connect(self.mailgun_provider)
+    
+    def sendgrid_provider(self):
+        self.mail_provider = 'sendgrid'
+        self.groupBox_3.setChecked(True)
+        self.domain_box.setDisabled(True)
+        show_information_message("""
+                                 <html>
+                                 <body>
+                                    Get your API KEY for sendgrid from \
+                                        <a href="https://sendgrid.com/partner/github-education">\
+                                        here</a>
+                                 </body>
+                                 </html>
+                """)
         
-    def set_setting_values(self):
+    def mailgun_provider(self):
+        self.mail_provider = 'mailgun'
+        self.groupBox_3.setChecked(True)
+        show_information_message("""
+                                 <html>
+                                 <body>
+                                    Get your API KEY for mailgun from \
+                                        <a href="https://www.mailgun.com/github-students/">here</a>
+                                 </body>
+                                 </html>
+                """)
+        
+    def get_credentials(self):
         pass
+    
+    def update_credentials(self):
+        pass
+    
+    def create_credentials(self, details):
+        payload = []
+        for i in details.items():
+            payload.append(i[0], i[1])
         
+        store_creds = StoreCredentials()
+        conn = store_creds.get_connection()
+        verify = store_creds.check_valid_connection(conn)
+        if verify:
+            res = store_creds.create_table(conn)
+            res = store_creds.insert_crednetials(conn, payload)
+        else:
+            show_warning_message("Credentials not saved try again!")
+            return False
     def cancel_operation(self):
         self.close()
         
+    def set_saved_values(self, response):
+        pass
+    
     def confirm_variables(self):
         if self.start_mode == 0:
             login_window = Loginwindow()
@@ -563,16 +618,48 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
             self.close()
     
     def set_env_variables(self):
-        username_response = self.username_box.text()
-        password_response = self.password_box.text()
-        api_key = self.apikey_box.text()
-        mail_domain = self.domain_box.text()
+        
+        if self.start_mode == 0:
+            
+            if self.username_box.text():    
+                self.details['username'] = self.username_box.text()
+            else:
+                show_warning_message('No username set. Cannot proceed !')
+            
+            if self.password_box.text():
+                self.details['password'] = self.password_box.text()
+            else:
+                show_warning_message('No password set. Cannot proceed !')
+            
+            if self.mail_provider:
+                self.details['mailprovider'] = self.mail_provider
+
+                if self.apikey_box.text():
+                    self.details['providerkey'] = self..text()
+            else:
+                pass
+            
+            if self.mail_provider == 'mailgun':
+                if self.domain_box.text():
+                    self.details['domainname'] = self.domain_box.text()
+            else:
+                pass
+            response = self.create_credentials(self.details)       
+        
+        else:
+            
+            response = self.get_credentials()
+            self.set_saved_values(response)
+        
+        self.details['username'] = self.username_box.text()
+        self.details['password'] = self.password_box.text()
+        self.details['providerkey'] = self.apikey_box.text()
+        self.details['domainname'] = self.domain_box.text()
         if self.sendgrid_check.isChecked():
-            mail_provider = 'Sendgrid'
+            self.details['mailprovider'] = 'Sendgrid'
         elif self.mailgun_check.isChecked():
-            mail_provider = 'MailGun'
-        os.environ['LOGIN_NAME'] = username_response
-        os.environ['PASSKEY'] = password_response
+            self.details['mailprovider'] = 'MailGun'
+       
         
             
 class ProgressWindow(QtWidgets.QMainWindow, progressScreen.Ui_MainWindow):
