@@ -74,6 +74,36 @@ def show_question_message(message_text):
     message.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
     return message.exec_()
 
+def check_for_settings():
+    
+    """ This function to check for credentials DB"""
+
+    store_creds = StoreCredentials()
+    response =  store_creds.check_for_creds_db()
+    return response
+
+def get_credentials(params):
+    
+    """ This function to get credentials from db"""
+
+    payload = []
+    for i in params:
+        payload.append(i)
+        
+    store_creds = StoreCredentials()
+    conn = store_creds.get_connection()
+    verify = store_creds.check_valid_connection(conn)
+    
+    if verify:
+        result = store_creds.get_credentials(conn, payload)
+        if result!='Error':
+            return result
+        else:
+            show_warning_message("Some Error occured!") 
+
+    else:
+        show_warning_message("Some Error occured!") 
+
 class SetupWindow(QtWidgets.QDialog,beginScreen.Ui_Dialog):
     
     """ This class if for changing the settings of the mailer """
@@ -139,20 +169,19 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
         self.setWindowIcon(QtGui.QIcon(r'Assets\Icons\logo-mailer.png'))
         self.login.clicked.connect(self.login_check)
         self.reset.clicked.connect(self.reset_check)
-        finish = QtWidgets.QAction("Quit",self)
-        finish.triggered.connect(self.close_window)
+        # finish = QtWidgets.QAction("Quit",self)
+        # finish.triggered.connect(self.close_window)
         
-    def check_for_settings(self):
-        
-        store_creds = StoreCredentials()
-        response =  store_creds.check_for_creds_db()
-        return response
             
     def check_for_saved_password(self):
         
         settings = QSettings()
         check_state = settings.value('settings/username','admin', type=str)
         return check_state
+    
+    def get_credentials(self):
+        pass
+        
     
     def save_password_settings(self, username, password):
         
@@ -176,7 +205,7 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
                 self.save_password_settings(username,passkey)
             try:
                 self.window = MainWindow()
-                self.close()
+                self.hide()
                 self.window.show()
             except:
                 show_warning_message('Erorr in login!!')
@@ -190,8 +219,8 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
                     pass
                 
     def reset_check(self):
-        self.password_text.setText("")
-        self.user.setText("")
+        self.password_text_box.setText("")
+        self.username_text_box.setText("")
     
     def close_window(self):
         global app
@@ -234,8 +263,8 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.add_placeholder_button.clicked.connect(self.add_placeholders)
         self.reset_placeholder_button.clicked.connect(self.reset_placeholder)
         
-        finish = QtWidgets.QAction("Quit",self)
-        finish.triggered.connect(self.close_window)
+        # finish = QtWidgets.QAction("Quit",self)
+        # finish.triggered.connect(self.close_window)
 
     def close_window(self, event):
         if show_question_message('Are you sure you wanna exit?') == YES :
@@ -304,7 +333,7 @@ class MainWindow(QtWidgets.QMainWindow,Ui_MainWindow):
         self.subject = ''
     
     def show_settings(self):
-        settings_window = SettingScreen(1)
+        settings_window = SettingScreen(1,{})
         settings_window.exec_()
 
     def view_html_file(self):
@@ -552,8 +581,7 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
             self.groupBox.setChecked(True)
             self.groupBox_3.setChecked(False)
         else:
-            self.saved_details = self.get_credentials()
-            self.set_saved_values(self.saved_details)
+            self.get_credentials(['*'])
             self.cancel_button.setEnabled(True)
             self.apply_button.setEnabled(False)
             
@@ -614,7 +642,7 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
         else:
             show_warning_message("Some Error occured!") 
         
-        del store_creds 
+        
     
     def update_credentials(self,params,saved_params):
         
@@ -661,17 +689,20 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
     def cancel_operation(self):
         self.close()
         
-    def set_saved_values(self, response):
+    def set_saved_values(self, result):
         
+        response = result[0]
         self.username_box.setText(response[1])
         self.password_box.setText(response[2])
         self.mail_provider = response[3]
         if self.mail_provider == 'sendgrid':
             self.sendgrid_check.setChecked(True)
             self.domain_box.setDisabled(True)
-        else:
+        elif self.mail_provider == 'mailgun':
             self.mailgun_check.setChecked(True)
             self.domain_box.setText(response[5])
+        else:
+            pass
         self.apikey_box.setText(response[4])
             
     def confirm_variables(self):
@@ -679,7 +710,7 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
         if self.start_mode == 0:
             login_window = Loginwindow()
             self.close()
-            login_window.show()
+            login_window.exec_()
         else:
             self.close()
     
@@ -691,11 +722,13 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
                 self.details['username'] = self.username_box.text()
             else:
                 show_warning_message('No username set. Cannot proceed !')
+                return
             
             if self.password_box.text():
                 self.details['password'] = self.password_box.text()
             else:
                 show_warning_message('No password set. Cannot proceed !')
+                return
             
             if self.mail_provider:
                 self.details['mailprovider'] = self.mail_provider
@@ -827,11 +860,11 @@ if __name__ == '__main__':
     global app
     app = QtWidgets.QApplication(sys.argv)
     app.setStyleSheet(qdarkstyle.load_stylesheet_pyqt5())
-    window = Loginwindow()
-    if not(window.check_for_settings()):
+    if not(check_for_settings()):
         begin_window = SetupWindow()
         begin_window.show()
     else:
+        window = Loginwindow()
         window.show()
         
     sys.exit(app.exec_())
