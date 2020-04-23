@@ -122,16 +122,16 @@ def send_mailgun_bulk_mail(to_mail,from_mail,subject,message,placeholder,attach=
         if placeholder:
            
             ## for placeholder values
-               data = {}
+            data = {}
                
                 ## for mails with dynmaic placeholders 
                
-                for index in range(len(to_mail)):
-                    for place in placeholder['excel_placeholder']:
-                        data[place[0]] = to_mail.iloc[index][place[1]]
-                    formatted_message = set_placeholder_values(message, data)
-                    to_mail_address = to_mail.iloc[index]['Email']
-                    mailgun_without_attachment(from_mail, to_mail_address, subject, formatted_message)                    
+            for index in range(len(to_mail)):
+                for place in placeholder['excel_placeholder']:
+                    data[place[0]] = to_mail.iloc[index][place[1]]
+                formatted_message = set_placeholder_values(message, data)
+                to_mail_address = to_mail.iloc[index]['Email']
+                mailgun_without_attachment(from_mail, to_mail_address, subject, formatted_message)                    
                     
         else:
             
@@ -170,11 +170,11 @@ def send_sendgrid_bulk_mail(to,sender,subject,message,placeholder,attach=False):
             ## for mails with dynmaic placeholders and no constant placeholders
         
             for index in range(len(to)):
-            for place in placeholder['excel_placeholder']:
-                data_for_placeholder[place[0]] = to.iloc[index][place[1]]
-            formatted_message = set_placeholder_values(message, data_for_placeholder)
-            to_email = to.iloc[index]['Email']
-            sendgrid_with_attachment(sender,to_email,subject,formatted_message,attachment)
+                for place in placeholder['excel_placeholder']:
+                    data_for_placeholder[place[0]] = to.iloc[index][place[1]]
+                formatted_message = set_placeholder_values(message, data_for_placeholder)
+                to_email = to.iloc[index]['Email']
+                sendgrid_with_attachment(sender,to_email,subject,formatted_message,attachment)
             
         else:
             
@@ -194,13 +194,14 @@ def send_sendgrid_bulk_mail(to,sender,subject,message,placeholder,attach=False):
             data_for_placeholder = {}
            
             ## for mails with dynmaic placeholders and no constant placeholders
-        
+            print(placeholder['excel_placeholder'])
             for index in range(len(to)):
-            for place in placeholder['excel_placeholder']:
-                data_for_placeholder[place[0]] = to.iloc[index][place[1]]
-            formatted_message = set_placeholder_values(message, data_for_placeholder)
-            to_email = to.iloc[index]['Email']
-            sendgrid_without_attachment(sender,to_email,subject,formatted_message)
+                for place in placeholder['excel_placeholder']:
+                    print(place)
+                    data_for_placeholder[place[0]] = to.iloc[index][place[1]]
+                formatted_message = set_placeholder_values(message, data_for_placeholder)
+                to_email = to.iloc[index]['Email']
+                sendgrid_without_attachment(sender,to_email,subject,formatted_message)
         
         else:
             
@@ -224,6 +225,27 @@ def get_format_template(template_dir):
         template = Environment(loader = BaseLoader).from_string(content)
         print(type(template))
     return template
+
+# def get_credentials(params):
+    
+#     """ This function to get credentials from db"""
+
+#     payload = []
+#     for i in params:
+#         payload.append(i)
+        
+#     store_creds = StoreCredentials()
+#     conn = store_creds.get_connection()
+#     verify = store_creds.check_valid_connection(conn)
+    
+#     if verify:
+#         result = store_creds.get_credentials(conn, payload)
+#         if result!='Error':
+#             return result
+#         else:
+#             return "Error"
+#     else:
+#         return "Error"
 
 def main(test_data = None):
     

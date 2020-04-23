@@ -91,15 +91,16 @@ class StoreCredentials():
         hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
         return hashed
 
-    def verify_credentials(self,password, hash):
-        hashed_password = self.get_credentials(['password'])
-        if hashed_password!='Error':
-            if bcrypt.checkpw(passwd, hashed_password.encode('utf-8')):
-                return True
-            else:
-                False
-        else:
-            return 'Not found'
+    def verify_credentials(self,password, hash_password):
+        
+            try:
+                if bcrypt.checkpw(password.encode('utf-8'), hash_password.encode('utf-8')):
+                    return True
+                else:
+                    return False
+            except:
+                return 'Error'
+
 
     def get_non_hash_value(self, *args):
         pass

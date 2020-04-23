@@ -13,9 +13,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         Dialog.setObjectName("Dialog")
-        Dialog.resize(746, 512)
+        Dialog.resize(762, 533)
         self.layoutWidget = QtWidgets.QWidget(Dialog)
-        self.layoutWidget.setGeometry(QtCore.QRect(9, 9, 701, 361))
+        self.layoutWidget.setGeometry(QtCore.QRect(9, 9, 741, 361))
         self.layoutWidget.setObjectName("layoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.layoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -53,7 +53,7 @@ class Ui_Dialog(object):
         self.domain_box.setObjectName("domain_box")
         self.verticalLayout.addWidget(self.groupBox_3)
         self.layoutWidget1 = QtWidgets.QWidget(Dialog)
-        self.layoutWidget1.setGeometry(QtCore.QRect(470, 470, 239, 25))
+        self.layoutWidget1.setGeometry(QtCore.QRect(500, 490, 239, 25))
         self.layoutWidget1.setObjectName("layoutWidget1")
         self.gridLayout = QtWidgets.QGridLayout(self.layoutWidget1)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
@@ -67,6 +67,20 @@ class Ui_Dialog(object):
         self.cancel_button = QtWidgets.QPushButton(self.layoutWidget1)
         self.cancel_button.setObjectName("cancel_button")
         self.gridLayout.addWidget(self.cancel_button, 0, 1, 1, 1)
+        self.widget = QtWidgets.QWidget(Dialog)
+        self.widget.setGeometry(QtCore.QRect(137, 410, 491, 51))
+        self.widget.setObjectName("widget")
+        self.gridLayout_2 = QtWidgets.QGridLayout(self.widget)
+        self.gridLayout_2.setContentsMargins(10, 2, 18, 0)
+        self.gridLayout_2.setHorizontalSpacing(91)
+        self.gridLayout_2.setVerticalSpacing(19)
+        self.gridLayout_2.setObjectName("gridLayout_2")
+        self.label = QtWidgets.QLabel(self.widget)
+        self.label.setObjectName("label")
+        self.gridLayout_2.addWidget(self.label, 0, 0, 1, 1)
+        self.org_mail = QtWidgets.QLineEdit(self.widget)
+        self.org_mail.setObjectName("org_mail")
+        self.gridLayout_2.addWidget(self.org_mail, 0, 1, 1, 1)
 
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
@@ -86,6 +100,7 @@ class Ui_Dialog(object):
         self.apply_button.setText(_translate("Dialog", "Apply"))
         self.ok_button.setText(_translate("Dialog", "OK"))
         self.cancel_button.setText(_translate("Dialog", "Cancel"))
+        self.label.setText(_translate("Dialog", "Organization Mail"))
 
 
 if __name__ == "__main__":

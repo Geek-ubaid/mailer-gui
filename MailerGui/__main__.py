@@ -34,8 +34,8 @@ from Screens import Send_test
 from Screens.utils import mailto
 from Screens.Model_dataframe import PandasModel
 from Screens.Store_credentials import StoreCredentials
+from Screens import settings_save_restore as save_restore
 
-load_dotenv()
 
 YES = QtWidgets.QMessageBox.Yes
 OK = QtWidgets.QMessageBox.Ok
@@ -162,6 +162,9 @@ class SetupWindow(QtWidgets.QDialog,beginScreen.Ui_Dialog):
 class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
     
     """ This Class is for login and authentication of user """
+    
+    settings = QSettings("MailerGui.ini", QSettings.IniFormat)
+
 
     def __init__(self,parent=None):
         super(Loginwindow, self).__init__(parent)
@@ -169,40 +172,39 @@ class Loginwindow(QtWidgets.QDialog,Ui_loginwindow):
         self.setWindowIcon(QtGui.QIcon(r'Assets\Icons\logo-mailer.png'))
         self.login.clicked.connect(self.login_check)
         self.reset.clicked.connect(self.reset_check)
-        # finish = QtWidgets.QAction("Quit",self)
-        # finish.triggered.connect(self.close_window)
+        self.get_login_details()
+        save_restore.restore(self.settings)
+        finish = QtWidgets.QAction("Quit",self)
+        finish.triggered.connect(self.close_window)
+                
+      
+    def get_login_details(self):
         
+        result = get_credentials(['*'])
+        self.login_name = result[0][1]
+        self.passkey = result[0][2]
             
-    def check_for_saved_password(self):
-        
-        settings = QSettings()
-        check_state = settings.value('settings/username','admin', type=str)
-        return check_state
-    
-    def get_credentials(self):
-        pass
-        
-    
-    def save_password_settings(self, username, password):
-        
-        settings = QSettings()
-        settings.setValue('settings/username', username)
-        settings.setValue('settings/password', password) 
-        settings.sync()
     
     def login_check(self):
         
-        if print(self.check_for_saved_password()):
-            print('settings saveed!')
-        
-        LOGIN_NAME = os.getenv('LOGIN_NAME')
-        PASSKEY = os.getenv('PASSKEY')
+        LOGIN_NAME = self.login_name
+        PASSKEY = self.passkey
         passkey = self.password_text_box.text()
         username = self.username_text_box.text()
-        print(passkey,username)
-        if (username == LOGIN_NAME and passkey == PASSKEY):
+    
+        store_creds = StoreCredentials()
+        response = store_creds.verify_credentials(passkey, PASSKEY)
+        
+        if response == 'Error':
+            show_warning_message('Erorr in login!!')
+            return
+        else:
+            pass
+            print(passkey,username)
+        
+        if (username == LOGIN_NAME and response):
             if self.forget_password.isChecked() == True:
-                self.save_password_settings(username,passkey)
+                save_restore.save(self.settings)
             try:
                 self.window = MainWindow()
                 self.hide()
@@ -704,6 +706,7 @@ class SettingScreen(QtWidgets.QDialog, settingScreen.Ui_Dialog):
         else:
             pass
         self.apikey_box.setText(response[4])
+        self.org_mail.setText(response[6])
             
     def confirm_variables(self):
         
