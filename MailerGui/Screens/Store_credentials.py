@@ -13,6 +13,7 @@ class StoreCredentials():
         super(StoreCredentials, self).__init__()
         
     def check_for_creds_db(self):
+        
         print(os.path.exists(self.DB_PATH))
         if os.path.exists(self.DB_PATH):
             # if self.check_if_any_table_exists():
@@ -23,6 +24,7 @@ class StoreCredentials():
             return False
         
     def check_if_any_table_exists(self):
+        
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
         c.execute(''' SELECT count(name) FROM sqlite_master WHERE type='table' AND name='user_db' ''')
@@ -35,6 +37,7 @@ class StoreCredentials():
             return False
                     
     def check_valid_connection(self, conn):
+        
         if conn == None:
             return False
         else:
@@ -109,7 +112,6 @@ class StoreCredentials():
         
         key = []
         value = []
-        print(query_params)
         for i in query_params:
             print(i)
             if i[0] == 'password':

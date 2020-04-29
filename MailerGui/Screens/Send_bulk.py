@@ -8,9 +8,12 @@ import requests
 import pandas as pd
 import base64
 import sendgrid
-from jinja2 import Environment, BaseLoader 
-from sendgrid.helpers.mail import *
 from dotenv import load_dotenv
+from sendgrid.helpers.mail import *
+from jinja2 import Environment, BaseLoader 
+
+from Screens import Store_credentials as creds
+
 
 load_dotenv()
 
@@ -181,7 +184,7 @@ def send_sendgrid_bulk_mail(to,sender,subject,message,placeholder,attach=False):
             ## for no placeholder values
             for index in range(len(to)):
                 to_email = to[index]
-                # sendgrid_with_attachment(sender,to_email,subject,message,attachment)
+                sendgrid_with_attachment(sender,to_email,subject,message,attachment)
 
     else:
         
@@ -194,10 +197,8 @@ def send_sendgrid_bulk_mail(to,sender,subject,message,placeholder,attach=False):
             data_for_placeholder = {}
            
             ## for mails with dynmaic placeholders and no constant placeholders
-            print(placeholder['excel_placeholder'])
             for index in range(len(to)):
                 for place in placeholder['excel_placeholder']:
-                    print(place)
                     data_for_placeholder[place[0]] = to.iloc[index][place[1]]
                 formatted_message = set_placeholder_values(message, data_for_placeholder)
                 to_email = to.iloc[index]['Email']
@@ -213,6 +214,7 @@ def send_sendgrid_bulk_mail(to,sender,subject,message,placeholder,attach=False):
         
             
 def set_placeholder_values(message, data):
+    
     """ For setting placeholder values in the message content """
     
     return message.render(data)
@@ -220,32 +222,33 @@ def set_placeholder_values(message, data):
 
 def get_format_template(template_dir):
     
+    """ For reading template and loading into the jinja template object """
+    
     with open(template_dir) as file_:
         content = file_.read()
         template = Environment(loader = BaseLoader).from_string(content)
-        print(type(template))
     return template
 
-# def get_credentials(params):
+def get_credentials(params):
     
-#     """ This function to get credentials from db"""
+    """ This function to get credentials from db"""
 
-#     payload = []
-#     for i in params:
-#         payload.append(i)
+    payload = []
+    for i in params:
+        payload.append(i)
         
-#     store_creds = StoreCredentials()
-#     conn = store_creds.get_connection()
-#     verify = store_creds.check_valid_connection(conn)
+    store_creds = creds.StoreCredentials()
+    conn = store_creds.get_connection()
+    verify = store_creds.check_valid_connection(conn)
     
-#     if verify:
-#         result = store_creds.get_credentials(conn, payload)
-#         if result!='Error':
-#             return result
-#         else:
-#             return "Error"
-#     else:
-#         return "Error"
+    if verify:
+        result = store_creds.get_credentials(conn, payload)
+        if result!='Error':
+            return result
+        else:
+            return "Error"
+    else:
+        return "Error"
 
 def main(test_data = None):
     

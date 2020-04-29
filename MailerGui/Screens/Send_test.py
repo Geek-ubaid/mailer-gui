@@ -54,7 +54,7 @@ def send_sendgrid_bulk_mail(to,sender,subject,message,attach=False):
     
     """ Sending test email function using sendgrid api"""
 
-    sg = sendgrid.SendGridAPIClient(apikey='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')
+    sg = sendgrid.SendGridAPIClient(apikey=os.getenv('API_KEY'))
     
     if(bool(attach)):
         
@@ -68,32 +68,32 @@ def send_sendgrid_bulk_mail(to,sender,subject,message,attach=False):
         attachment.disposition = 'attachment' # either inline or attachment
         attachment.content_id = '' ## any valid id
         
-        # try:
-        to_email = Email(to)
-        from_email = Email(sender)
-        content = Content("text/html",message)
-        mail = Mail(from_email, subject, to_email, content)
-        mail.add_attachment(attachment)
-        response = sg.client.mail.send.post(request_body=mail.get())
-        print_format("mail sent to" + to)
-        print_format(attach_file_name)
-        print_format(response.status_code)
-        # except:
-        #     print_format("mail not sent to " + to)
-        #     pass
+        try:
+            to_email = Email(to)
+            from_email = Email(sender)
+            content = Content("text/html",message)
+            mail = Mail(from_email, subject, to_email, content)
+            mail.add_attachment(attachment)
+            response = sg.client.mail.send.post(request_body=mail.get())
+            print_format("mail sent to " + to)
+            print_format(attach_file_name)
+            print_format(response.status_code)
+        except:
+            print_format("mail not sent to " + to)
+            pass
 
     else:
-        # try:
-        to_email = Email(to)
-        from_email = Email('dscvitvellore@gmail.com')
-        content = Content("text/html", message)
-        mail = Mail(from_email, subject, to_email, content)
-        response = sg.client.mail.send.post(request_body=mail.get())
-        print_format("mail sent to" + to)
-        print_format(response.status_code)
-        # except:
-        #     print_format("mail not sent to " + to)
-        # pass
+        try:
+            to_email = Email(to)
+            from_email = Email('dscvitvellore@gmail.com')
+            content = Content("text/html", message)
+            mail = Mail(from_email, subject, to_email, content)
+            response = sg.client.mail.send.post(request_body=mail.get())
+            print_format("mail sent to " + to)
+            print_format(response.status_code)
+        except:
+            print_format("mail not sent to " + to)
+            pass
         
 def set_placeholder_values(message, data):
     """ For setting placeholder values in the message content """
@@ -106,7 +106,6 @@ def get_format_template(template_dir):
     with open(template_dir) as file_:
         content = file_.read()
         template = Environment(loader = BaseLoader).from_string(content)
-        print(type(template))
     return template
 
 def main(data):
