@@ -5,3 +5,6 @@
 - [X] Managing begin and setup screen
 - [X] Need to think about how to setup credentials at initial setup
 - [ ] Add loader in between the operation in the desktop
+
+- [x] update settings not working
+- []

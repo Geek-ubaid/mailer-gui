@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 from sendgrid.helpers.mail import *
 from jinja2 import Environment, BaseLoader 
 
-from Screens import Store_credentials as creds
+import Store_credentials as creds
 
 
 load_dotenv()
@@ -32,7 +32,7 @@ def sendgrid_with_attachment(from_mail,to_mail,subject,message,attachment):
         mail.add_attachment(attachment)
         response = sg.client.mail.send.post(request_body=mail.get())
         print_format("mail sent to " + to_mail)
-        print_format(attach)
+        # print_format(attach)
         print_format(response.status_code)
     except:
         print_format("mail not sent to " +  to_mail)
